@@ -1,6 +1,6 @@
 # PackaDive App
 
-## Main add idea
+## Main App idea
 
 When packing and planning for a dive trip there is a lot of work involved.
 All dive gear must be checked. All batteries charged. Dive computers charged, etc.
