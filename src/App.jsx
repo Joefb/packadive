@@ -1,5 +1,6 @@
 import { Typography, Card } from "@material-tailwind/react";
 import Layout from "./components/Layout";
+import { useAuth } from "./contexts/AuthContext";
 
 export default function App() {
   return (
