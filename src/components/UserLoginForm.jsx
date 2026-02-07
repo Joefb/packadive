@@ -43,7 +43,7 @@ const UserLoginForm = () => {
           {/* last name */}
           <div>
             <label htmlFor="user_name" className="block text-sm font-medium text-gray-700 mb-1">
-              Last Name *
+              User Name *
             </label>
             <input
               type="text"

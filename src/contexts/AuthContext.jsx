@@ -24,15 +24,17 @@ export const AuthProvider = ({ children }) => {
 
   //Grab already logged in user
   useEffect(() => {
-    const savedToken = localStorage.getItem('token');
+    const savedToken = localStorage.getItem('auth_token');
     const savedUser = localStorage.getItem('user');
 
-    setToken(savedToken);
-    setUser(JSON.parse(savedUser)) //parsing JSON object from LS
+    if (savedToken && savedUser) {
+      setToken(savedToken);
+      setUser(JSON.parse(savedUser)) //parsing JSON object from LS
+    }
   }, []);
 
   // Login function
-  const login = async (email, password) => { //sending api request to login with email and password
+  const login = async (user_name, password) => { //sending api request to login with email and password
 
     console.log('Send login request');
 
@@ -43,7 +45,7 @@ export const AuthProvider = ({ children }) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        email: email,
+        user_name: user_name,
         password: password
       })
     });
@@ -54,7 +56,7 @@ export const AuthProvider = ({ children }) => {
 
     setToken(loginData.token);
     setUser(loginData.user);
-    localStorage.setItem("token", loginData.token);
+    localStorage.setItem("auth_token", JSON.stringify(loginData.auth_token));
     localStorage.setItem("user", JSON.stringify(loginData.user)); //transforming the user into json readable string
   }
 
@@ -88,7 +90,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   const logout = () => {
-    setToken(''); //clearing saved tokens
+    setToken(null); //clearing saved tokens
     setUser(null)
     localStorage.removeItem('token');
     localStorage.removeItem('user');
