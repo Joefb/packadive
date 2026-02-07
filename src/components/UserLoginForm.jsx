@@ -1,5 +1,6 @@
 import { useAuth } from "../contexts/AuthContext";
 import { useState } from 'react';
+import { Link } from "react-router-dom";
 
 const UserLoginForm = () => {
   const { login } = useAuth();
@@ -80,10 +81,9 @@ const UserLoginForm = () => {
         </div>
 
         {/* buttons */}
-        <div className="flex justify-end gap-4 pt-4 border-t border-gray-200">
+        <div className="flex justify-between gap-4 pt-4 border-t border-gray-200">
           <button
             type="button"
-            // onClick={() => setShowTechLoginForm(false)}
             className="
               px-5 py-2.5 
               text-gray-700 
@@ -94,7 +94,7 @@ const UserLoginForm = () => {
               transition-colors
             "
           >
-            Cancel
+            <Link to="/register">Register New User</Link>
           </button>
 
           <button

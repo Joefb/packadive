@@ -60,14 +60,18 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("user", JSON.stringify(loginData.user)); //transforming the user into json readable string
   }
 
-  const registerUser = async (registerUser) => {
+  const registerUser = async (email, password, user_name) => {
     // const response = await fetch("http://127.0.0.1:5000/users", {
     const response = await fetch(API_REGISTER_USER, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(registerUser)
+      body: JSON.stringify({
+        email: email,
+        password: password,
+        user_name: user_name
+      })
     })
     const responseData = await response.json();
     console.log(responseData);
