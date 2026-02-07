@@ -1,26 +1,76 @@
 import { useAuth } from "../contexts/AuthContext";
+import { Progress, Typography } from "@material-tailwind/react";
+import { useState, useRef, useEffect } from "react";
 
 export default function Navbar() {
-  const { isAuthenticated, logout, } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLogout = () => {
+    setDropdownOpen(false);
+    logout();
+  }
+
 
   return (
-    <div className="flex h-16 items-center justify-between px-6 border-b bg-white dark:bg-gray-900">
+    <div className="flex h-20 items-center justify-between px-6 border-b bg-white dark:bg-gray-900">
       {/* Left side - logo or app name */}
-      <div className="text-xl font-bold">YourApp</div>
+      <div className="text-xl font-bold">Planadive</div>
+
+      {/* Completion bar */}
+      {isAuthenticated && (
+        <div className="w-1/2">
+          <div className="mb-2 flex items-center justify-between gap-4">
+            <Typography color="blue-gray" variant="h6">
+              Packed and Ready
+            </Typography>
+            <Typography color="blue-gray" variant="h6">
+              50%
+            </Typography>
+          </div>
+          <Progress value={50} />
+        </div>
+      )}
 
       {/* Right side - user actions */}
       {isAuthenticated && (
         <div className="flex items-center gap-4">
-          <button className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">
-            🔔 Notifications
-          </button>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gray-300"></div>
-            <span>Joe</span>
+          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 shadow-lg text-4xl">
+            🤿
+          </div>
+
+          <div className="relative" ref={dropdownRef}>
+            <button
+              className="flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 shadow-lg text-lg font-semibold focus:outline-none"
+              onClick={() => setDropdownOpen((open) => !open)}
+            >
+              <span>{user.user_name}</span>
+            </button>
+            {dropdownOpen && (
+              <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-900 rounded-lg shadow-lg py-2 z-50">
+                <a href="/profile" className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800">Profile</a>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
     </div>
   );
 }
-
