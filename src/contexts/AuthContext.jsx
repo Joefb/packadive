@@ -19,7 +19,7 @@ export const useAuth = () => {
 
 //Step 3
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(null);
+  const [auth_token, setToken] = useState(null);
   const [user, setUser] = useState(null);
 
   //Grab already logged in user
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
     const loginData = await response.json();
     console.log('Token data:', loginData);
 
-    setToken(loginData.token);
+    setToken(loginData.auth_token);
     setUser(loginData.user);
     localStorage.setItem("auth_token", JSON.stringify(loginData.auth_token));
     localStorage.setItem("user", JSON.stringify(loginData.user)); //transforming the user into json readable string
@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }) => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
+        'Authorization': 'Bearer ' + auth_token
       },
       body: JSON.stringify(updateData)
     })
@@ -92,17 +92,17 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setToken(null); //clearing saved tokens
     setUser(null)
-    localStorage.removeItem('token');
+    localStorage.removeItem('auth_token');
     localStorage.removeItem('user');
   }
 
   const deleteUser = async () => {
     // const response = fetch("http://127.0.0.1:5000/users", {
-    const response = fetch(API_DELETE_USER, {
+    const response = await fetch(API_DELETE_USER, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
+        'Authorization': 'Bearer ' + auth_token
       }
     });
     const responseData = await response.json();
@@ -111,14 +111,14 @@ export const AuthProvider = ({ children }) => {
   }
 
   const value = {
-    token,
+    auth_token,
     user,
     login,
     logout,
     registerUser,
     updateUser,
     deleteUser,
-    isAuthenticated: token ? true : false
+    isAuthenticated: auth_token ? true : false
   }
 
   return (
