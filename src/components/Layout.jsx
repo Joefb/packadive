@@ -2,11 +2,14 @@ import { ReactNode } from 'react';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
+import { useAuth } from '../contexts/AuthContext';
 
-export default function Layout({ children, showSidebar = true }) {
+export default function Layout({ children }) {
+  const { isAuthenticated } = useAuth()
+
   return (
     <div className="flex h-dvh w-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
-      {showSidebar && (
+      {isAuthenticated && (
         <aside className="hidden md:block md:w-72 lg:w-80 shrink-0 border-r border-gray-200 dark:border-gray-800 overflow-y-auto">
           <Sidebar />
         </aside>
