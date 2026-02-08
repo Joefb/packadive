@@ -78,7 +78,6 @@ export const AuthProvider = ({ children }) => {
   }
 
   const updateUser = async (updateData) => {
-    // const response = await fetch("http://127.0.0.1:5000/users", {
     const response = await fetch(API_UPDATE_USER, {
       method: 'PUT',
       headers: {
@@ -101,7 +100,6 @@ export const AuthProvider = ({ children }) => {
   }
 
   const deleteUser = async () => {
-    // const response = fetch("http://127.0.0.1:5000/users", {
     const response = await fetch(API_DELETE_USER, {
       method: 'DELETE',
       headers: {
