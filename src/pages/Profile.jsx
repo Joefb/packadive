@@ -3,7 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 
 const Profile = () => {
   const { user, updateUser } = useAuth();
-  const [email, setEmail] = useState(user?.email || '');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');

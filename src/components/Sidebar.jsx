@@ -1,5 +1,9 @@
-// src/components/Sidebar.jsx
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 export default function Sidebar() {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col h-full p-4">
       {/* Logo or brand at top */}
@@ -7,9 +11,9 @@ export default function Sidebar() {
 
       {/* Navigation links */}
       <nav className="flex flex-col gap-2">
-        <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+        <Link to="/" className="flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800">
           🏠 Home
-        </a>
+        </Link>
         <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
           👥 Users
         </a>
