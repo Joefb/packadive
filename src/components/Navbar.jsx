@@ -26,19 +26,20 @@ export default function Navbar() {
 
   return (
     <div className="flex h-20 items-center justify-between px-6 border-b bg-white dark:bg-gray-900">
-      {/* Left side - logo or app name */}
       <div className="text-xl font-bold">Planadive</div>
-      <div className="flex h-20 items-center justify-between px-6 border-b bg-white dark:bg-gray-900">
-        {/* Right side - Login and Register buttons */}
-        <div className="flex gap-4">
-          <Link to="/login">
-            <button className="px-4 py-2 bg-blue-600 text-white rounded">Login</button>
-          </Link>
-          <Link to="/register">
-            <button className="px-4 py-2 bg-green-600 text-white rounded">Register</button>
-          </Link>
+      {/* Login/Register buttons */}
+      {!isAuthenticated && (
+        <div className="flex h-20 items-center justify-between px-6 border-b bg-white dark:bg-gray-900">
+          <div className="flex gap-4">
+            <Link to="/login">
+              <button className="px-4 py-2 bg-blue-600 text-white rounded">Login</button>
+            </Link>
+            <Link to="/register">
+              <button className="px-4 py-2 bg-green-600 text-white rounded">Register</button>
+            </Link>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Completion bar */}
       {isAuthenticated && (

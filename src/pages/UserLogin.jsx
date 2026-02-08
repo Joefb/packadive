@@ -1,9 +1,11 @@
 import { useAuth } from "../contexts/AuthContext";
 import { useState } from 'react';
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const UserLoginForm = () => {
+const UserLogin = () => {
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     user_name: '',
@@ -21,12 +23,17 @@ const UserLoginForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    await login(formData.user_name, formData.password);
+    try {
+      await login(formData.user_name, formData.password);
+      setFormData({
+        user_name: '',
+        password: '',
+      });
+      navigate('/');
 
-    setFormData({
-      user_name: '',
-      password: '',
-    });
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
   return (
@@ -118,4 +125,4 @@ const UserLoginForm = () => {
 
 }
 
-export default UserLoginForm
+export default UserLogin

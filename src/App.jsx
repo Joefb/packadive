@@ -1,6 +1,6 @@
 import { Typography, Card } from "@material-tailwind/react";
 import Layout from "./components/Layout";
-import UserLoginForm from "./components/UserLoginForm";
+import UserLogin from "./pages/UserLogin";
 import { useAuth } from "./contexts/AuthContext";
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from "./pages/Home"
@@ -24,7 +24,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           {/* <Route path="/register" element={<RegisterUser />} /> */}
           <Route path="/register" element={<RegisterUser />} />
-          <Route path="/login" element={<UserLoginForm />} />
+          <Route path="/login" element={<UserLogin />} />
         </Routes>
       </Layout>
     </BrowserRouter>
