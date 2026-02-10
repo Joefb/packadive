@@ -7,7 +7,7 @@ export default function Sidebar() {
   return (
     <div className="flex flex-col h-full p-4">
       {/* Logo or brand at top */}
-      <div className="mb-8 text-xl font-bold">Dashboard</div>
+      <div className="mb-8 text-xl font-bold">Add a List</div>
 
       {/* Navigation links */}
       <nav className="flex flex-col gap-2">

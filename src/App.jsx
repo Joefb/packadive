@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from "./pages/Home"
 import RegisterUser from "./pages/RegisterUser"
 import Profile from "./pages/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
   const { isAuthenticated, logout, } = useAuth();
@@ -14,18 +15,11 @@ export default function App() {
 
     <BrowserRouter>
       <Layout>
-        {/* {isAuthenticated != true && ( */}
-        {/*   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"> */}
-        {/*     <div className="bg-white p-8 rounded shadow-lg relative w-1/2 m-10"> */}
-        {/*       <UserLoginForm /> */}
-        {/*     </div> */}
-        {/*   </div> */}
-        {/* )} */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<RegisterUser />} />
           <Route path="/login" element={<UserLogin />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         </Routes>
       </Layout>
     </BrowserRouter>
