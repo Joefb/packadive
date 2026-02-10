@@ -5,13 +5,16 @@ import "./index.css";
 
 import { ThemeProvider } from "@material-tailwind/react";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ListProvider } from "./contexts/ListContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AuthProvider>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </AuthProvider>
+    <ListProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </AuthProvider>
+    </ListProvider>
   </React.StrictMode>,
 );
