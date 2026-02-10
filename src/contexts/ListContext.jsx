@@ -18,7 +18,7 @@ export const useList = () => {
 //Step 3
 export const ListProvider = ({ children }) => {
   const [listData, setListData] = useState([]);
-  const { auth_token } = useAuth();
+  const { auth_token } = useAuth() || {};
 
   // Get list data from local storage
   useEffect(() => {
@@ -28,6 +28,12 @@ export const ListProvider = ({ children }) => {
       setListData(JSON.parse(listData));
     }
   }, []);
+
+  useEffect(() => {
+    if (auth_token) {
+      getList();
+    }
+  }, [auth_token]);
 
   // Get list function
   const getList = async () => { //sending api request
