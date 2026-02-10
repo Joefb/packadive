@@ -16,10 +16,6 @@ export default function Sidebar() {
     setListName('');
   };
 
-  const handleSelectList = (listId) => {
-    setCurrentListId(listId);
-  }
-
   useEffect(() => {
     if (auth_token) {
       getList();
@@ -69,7 +65,7 @@ export default function Sidebar() {
             <button
               key={list.id}
               className="flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900 transition font-medium"
-              onClick={() => handleSelectList(list.id)} // Optional: handle click
+              onClick={() => setCurrentListId(list.id)}
             >
               {list.checklist_name}
             </button>

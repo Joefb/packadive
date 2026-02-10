@@ -30,18 +30,21 @@ const CheckList = () => {
   if (!checklist) return <div className="text-gray-500">No checklist selected.</div>;
 
   return (
-    <ul className="flex flex-col gap-2 mt-4">
-      {checklist.list_items.map((item, idx) => (
-        <li key={item.id}>
-          <button
-            className={`w-full px-4 py-2 rounded transition ${ITEM_COLORS[itemStates[idx]]}`}
-            onClick={() => handleItemClick(idx)}
-          >
-            {item.name} — {itemStates[idx]}
-          </button>
-        </li>
-      ))}
-    </ul>
+    <div>
+      <h2 className="text-2xl font-bold mb-4">{checklist.checklist_name}</h2>
+      <ul className="flex flex-col gap-2 mt-4">
+        {checklist.list_items.map((item, idx) => (
+          <li key={item.id}>
+            <button
+              className={`w-full px-4 py-2 rounded transition ${ITEM_COLORS[itemStates[idx]]}`}
+              onClick={() => handleItemClick(idx)}
+            >
+              {item.item_name} — {itemStates[idx]}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

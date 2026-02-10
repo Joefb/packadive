@@ -3,6 +3,7 @@ import { useAuth } from './AuthContext';
 
 // Endpoints:
 const API_LISTS = "http://127.0.0.1:5000/checklists";
+const API_ITEMS = "http://127.0.0.1:5000/list_item";
 
 //Step 1
 //Create the context
@@ -30,7 +31,7 @@ export const ListProvider = ({ children }) => {
     }
   }, []);
 
-
+  ///// CHECKLIST FUNCTIONS /////
   // Get list function
   const getList = useCallback(async () => { //sending api request
     if (!auth_token) {
@@ -146,6 +147,51 @@ export const ListProvider = ({ children }) => {
     await getList();
   }, [auth_token, listData, getList]);
 
+  ///// ITEMS FUNCTIONS /////
+
+  const createItem = useCallback(async (itemName, status, listId) => {
+    if (!auth_token) {
+      console.error('No auth token found.');
+      return;
+    }
+
+    // item_name=data["item_name"],
+    // status=data["status"],
+    // checklist_id=data["checklist_id"],
+    //
+    try {
+      const response = await fetch(API_ITEMS, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + auth_token
+        },
+        body: JSON.stringify({
+          item_name: itemName,
+          status: status,
+          checklist_id: listId,
+        })
+      })
+      const responseData = await response.json();
+      console.log(responseData);
+
+    } catch (error) {
+      console.error('Error creating item:', error);
+    }
+
+  }, [auth_token, listData, getList]);
+
+  // const updateItem = useCallback(async (itemId, itemName) => {
+  //   // item_name=data["item_name"],
+  //   // status=data["status"],
+  //   // checklist_id=data["checklist_id"],
+  //
+  // }, []);
+  //
+  // const deleteItem = useCallback(async (itemId) => {
+  //
+  // }, []);
+
   const value = {
     listData,
     currentListId,
@@ -154,6 +200,7 @@ export const ListProvider = ({ children }) => {
     createList,
     updateList,
     getList,
+    createItem,
   }
 
   return (
