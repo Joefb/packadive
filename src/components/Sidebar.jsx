@@ -1,8 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useList } from "../contexts/ListContext";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Sidebar() {
   const navigate = useNavigate();
+  const { getList } = useList();
+  const { auth_token } = useAuth();
+
+  useEffect(() => {
+    if (auth_token) {
+      getList();
+    }
+  }, [auth_token, getList]);
 
   return (
     <div className="flex flex-col h-full p-4">

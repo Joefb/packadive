@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     const savedUser = localStorage.getItem('user');
 
     if (savedToken && savedUser) {
-      setToken(savedToken);
+      setToken(JSON.parse(savedToken));
       setUser(JSON.parse(savedUser)) //parsing JSON object from LS
     }
   }, []);
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
 
     setToken(loginData.auth_token);
     setUser(loginData.user);
-    localStorage.setItem("auth_token", JSON.stringify(loginData.auth_token));
+    localStorage.setItem("auth_token", loginData.auth_token);
     localStorage.setItem("user", JSON.stringify(loginData.user)); //transforming the user into json readable string
   }
 

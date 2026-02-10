@@ -9,12 +9,12 @@ import { ListProvider } from "./contexts/ListContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ListProvider>
-      <AuthProvider>
+    <AuthProvider>
+      <ListProvider>
         <ThemeProvider>
           <App />
         </ThemeProvider>
-      </AuthProvider>
-    </ListProvider>
+      </ListProvider>
+    </AuthProvider>
   </React.StrictMode>,
 );

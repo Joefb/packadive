@@ -2,10 +2,12 @@ import { useAuth } from "../contexts/AuthContext";
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useList } from "../contexts/ListContext";
 
 const UserLogin = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { getList } = useList();
 
   const [formData, setFormData] = useState({
     user_name: '',

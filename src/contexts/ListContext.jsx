@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 
 // Endpoints:
@@ -29,14 +29,13 @@ export const ListProvider = ({ children }) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (auth_token) {
-      getList();
-    }
-  }, [auth_token]);
 
   // Get list function
-  const getList = async () => { //sending api request
+  const getList = useCallback(async () => { //sending api request
+    if (!auth_token) {
+      console.error('No auth token found.');
+      return;
+    }
 
     console.log('Getting lists');
 
@@ -54,10 +53,15 @@ export const ListProvider = ({ children }) => {
 
     setListData(listData);
     localStorage.setItem("list_data", JSON.stringify(listData));
-  }
+  }, [auth_token]);
 
   // Create List
-  const createList = async (checklistName) => {
+  const createList = useCallback(async (checklistName) => {
+    if (!auth_token) {
+      console.error('No auth token found.');
+      return;
+    }
+
     try {
       const response = await fetch(API_LISTS, {
         method: 'POST',
@@ -77,10 +81,15 @@ export const ListProvider = ({ children }) => {
     } catch (error) {
       console.error('Error creating list:', error);
     }
-  }
+  }, [auth_token, getList]);
 
   // Update Checklist Name
-  const updateList = async (checkListID, checklistName) => {
+  const updateList = useCallback(async (checkListID, checklistName) => {
+    if (!auth_token) {
+      console.error('No auth token found.');
+      return;
+    }
+
     const response = await fetch(API_LISTS, {
       method: 'PUT',
       headers: {
@@ -107,10 +116,15 @@ export const ListProvider = ({ children }) => {
     localStorage.setItem('list_data', JSON.stringify(updatedList));
     setListData(updatedList);
     await getList();
-  }
+  }, [auth_token, listData, getList]);
 
   // Delete List
-  const deleteList = async (checkListId) => {
+  const deleteList = useCallback(async (checkListId) => {
+    if (!auth_token) {
+      console.error('No auth token found.');
+      return;
+    }
+
     const response = await fetch(API_LISTS, {
       method: 'DELETE',
       headers: {
@@ -129,7 +143,7 @@ export const ListProvider = ({ children }) => {
     setListData(updatedList);
     localStorage.setItem('list_data', JSON.stringify(updatedList));
     await getList();
-  }
+  }, [auth_token, listData, getList]);
 
   const value = {
     listData,
