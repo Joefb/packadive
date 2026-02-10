@@ -4,7 +4,7 @@ import { useList } from "../contexts/ListContext";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function Sidebar() {
-  const { getList, createList, listData } = useList();
+  const { getList, createList, listData, setCurrentListId } = useList();
   const { auth_token } = useAuth();
   const [listName, setListName] = useState('');
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -15,6 +15,10 @@ export default function Sidebar() {
     setCreateModalOpen(false);
     setListName('');
   };
+
+  const handleSelectList = (listId) => {
+    setCurrentListId(listId);
+  }
 
   useEffect(() => {
     if (auth_token) {
@@ -65,7 +69,7 @@ export default function Sidebar() {
             <button
               key={list.id}
               className="flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900 transition font-medium"
-            // onClick={() => handleSelectList(list.id)} // Optional: handle click
+              onClick={() => handleSelectList(list.id)} // Optional: handle click
             >
               {list.checklist_name}
             </button>

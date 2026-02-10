@@ -19,6 +19,7 @@ export const useList = () => {
 export const ListProvider = ({ children }) => {
   const [listData, setListData] = useState([]);
   const { auth_token } = useAuth() || {};
+  const [currentListId, setCurrentListId] = useState(null);
 
   // Get list data from local storage
   useEffect(() => {
@@ -147,6 +148,8 @@ export const ListProvider = ({ children }) => {
 
   const value = {
     listData,
+    currentListId,
+    setCurrentListId,
     deleteList,
     createList,
     updateList,

@@ -1,23 +1,14 @@
-const UserHome = () => {
-  const [lists, setLists] = useState([]);
+import { useList } from '../contexts/ListContext';
+import CheckList from '../components/CheckList';
 
-  const fetchLists = async () => {
-    const response = await fetch(API_UPDATE_USER, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + auth_token
-      },
-      body: JSON.stringify(updateData)
-    })
-    const updatedUserData = await response.json();
-    console.log(updatedUserData);
-    setUser(updatedUserData);
-    localStorage.setItem('user', JSON.stringify(updatedUserData));
-  }
+const UserHome = () => {
+  const { listData } = useList();
 
   return (
-    <div></div>
+    <div>
+      <h1>User Home</h1>
+      <CheckList />
+    </div>
   )
 }
 

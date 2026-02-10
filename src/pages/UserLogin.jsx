@@ -31,7 +31,7 @@ const UserLogin = () => {
         user_name: '',
         password: '',
       });
-      navigate('/');
+      navigate('/userhome');
 
     } catch (error) {
       console.error("Login failed:", error);

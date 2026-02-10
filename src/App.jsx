@@ -7,6 +7,7 @@ import Home from "./pages/Home"
 import RegisterUser from "./pages/RegisterUser"
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import UserHome from "./pages/UserHome";
 
 export default function App() {
   const { isAuthenticated, logout, } = useAuth();
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="/register" element={<RegisterUser />} />
           <Route path="/login" element={<UserLogin />} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/userhome" element={<ProtectedRoute><UserHome /></ProtectedRoute>} />
         </Routes>
       </Layout>
     </BrowserRouter>
