@@ -198,6 +198,7 @@ export const ListProvider = ({ children }) => {
   //
   // }, []);
   // Update Item Status
+  // Update Item Status
   const updateItemStatus = useCallback(async (itemId, newStatus) => {
     if (!auth_token) {
       console.error('No auth token found.');
@@ -205,14 +206,14 @@ export const ListProvider = ({ children }) => {
     }
 
     try {
-      const response = await fetch(API_ITEMS, {
+      // Include itemId in the URL path
+      const response = await fetch(`${API_ITEMS}/${itemId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + auth_token
         },
         body: JSON.stringify({
-          item_id: itemId,
           status: newStatus,
         })
       });
