@@ -197,6 +197,68 @@ export const ListProvider = ({ children }) => {
   // const deleteItem = useCallback(async (itemId) => {
   //
   // }, []);
+  // Update Item Status
+  const updateItemStatus = useCallback(async (itemId, newStatus) => {
+    if (!auth_token) {
+      console.error('No auth token found.');
+      return;
+    }
+
+    try {
+      const response = await fetch(API_ITEMS, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + auth_token
+        },
+        body: JSON.stringify({
+          item_id: itemId,
+          status: newStatus,
+        })
+      });
+      const responseData = await response.json();
+      console.log('Item updated:', responseData);
+      return responseData;
+    } catch (error) {
+      console.error('Error updating item:', error);
+      throw error;
+    }
+  }, [auth_token]);
+
+  // Save all changed items in the current checklist
+  const saveChecklistChanges = useCallback(async (checklistId) => {
+    if (!auth_token) {
+      console.error('No auth token found.');
+      return false;
+    }
+
+    const checklist = listData.find(list => list.id === checklistId);
+    if (!checklist) {
+      console.error('Checklist not found');
+      return false;
+    }
+
+    try {
+      // Update all items in the checklist
+      const updatePromises = checklist.list_items.map(item =>
+        updateItemStatus(item.id, item.status)
+      );
+
+      await Promise.all(updatePromises);
+      console.log('All items saved successfully');
+
+      // Refresh the list data from server
+      await getList();
+
+      // Reset the change flag
+      setListChange(false);
+
+      return true;
+    } catch (error) {
+      console.error('Error saving checklist changes:', error);
+      return false;
+    }
+  }, [auth_token, listData, updateItemStatus, getList]);
 
   const value = {
     listData,
@@ -208,6 +270,8 @@ export const ListProvider = ({ children }) => {
     updateList,
     getList,
     createItem,
+    updateItemStatus,
+    saveChecklistChanges,
     listChange,
     setListChange,
   }
