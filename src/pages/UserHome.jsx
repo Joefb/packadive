@@ -10,22 +10,28 @@ const UserHome = () => {
   const [itemName, setItemName] = useState('');
   const listChangeRef = useRef(listChange);
   const currentListIdRef = useRef(currentListId);
+  const listDataRef = useRef(listData);
 
   // Keep refs updated
   useEffect(() => {
     listChangeRef.current = listChange;
     currentListIdRef.current = currentListId;
-  }, [listChange, currentListId]);
+    listDataRef.current = listData;
+  }, [listChange, currentListId, listData]);
 
   // Auto-save on page unload (tab close, browser close, navigate away)
   useEffect(() => {
     const handleBeforeUnload = async (e) => {
       if (listChangeRef.current && currentListIdRef.current) {
-        // Note: Modern browsers may not wait for async operations
-        // but we'll try anyway
-        e.preventDefault();
-        await saveChecklistChanges(currentListIdRef.current);
-        e.returnValue = ''; // Chrome requires returnValue to be set
+        const checklistToSave = listDataRef.current.find(
+          list => list.id === currentListIdRef.current
+        );
+
+        if (checklistToSave) {
+          e.preventDefault();
+          await saveChecklistChanges(checklistToSave);
+          e.returnValue = '';
+        }
       }
     };
 
@@ -40,8 +46,13 @@ const UserHome = () => {
   useEffect(() => {
     return () => {
       if (listChangeRef.current && currentListIdRef.current) {
-        // This will run when navigating away
-        saveChecklistChanges(currentListIdRef.current);
+        const checklistToSave = listDataRef.current.find(
+          list => list.id === currentListIdRef.current
+        );
+
+        if (checklistToSave) {
+          saveChecklistChanges(checklistToSave);
+        }
       }
     };
   }, [saveChecklistChanges]);

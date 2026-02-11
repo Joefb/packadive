@@ -227,19 +227,20 @@ export const ListProvider = ({ children }) => {
   }, [auth_token]);
 
   // Save all changed items in the current checklist
-  const saveChecklistChanges = useCallback(async (checklistId) => {
+  const saveChecklistChanges = useCallback(async (checklist) => {
     if (!auth_token) {
       console.error('No auth token found.');
       return false;
     }
 
-    const checklist = listData.find(list => list.id === checklistId);
-    if (!checklist) {
-      console.error('Checklist not found');
+    if (!checklist || !checklist.list_items) {
+      console.error('Invalid checklist data');
       return false;
     }
 
     try {
+      console.log(`Saving ${checklist.list_items.length} items for checklist ${checklist.id}`);
+
       // Update all items in the checklist
       const updatePromises = checklist.list_items.map(item =>
         updateItemStatus(item.id, item.status)
@@ -259,7 +260,7 @@ export const ListProvider = ({ children }) => {
       console.error('Error saving checklist changes:', error);
       return false;
     }
-  }, [auth_token, listData, updateItemStatus, getList]);
+  }, [auth_token, updateItemStatus, getList]);
 
   const value = {
     listData,

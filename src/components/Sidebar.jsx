@@ -28,7 +28,15 @@ export default function Sidebar() {
     // If there are unsaved changes on the current list, save them first
     if (listChange && currentListId) {
       console.log('Auto-saving changes before switching lists...');
-      await saveChecklistChanges(currentListId);
+
+      // Find and pass the actual checklist data
+      const checklistToSave = listData.find(list => list.id === currentListId);
+
+      if (checklistToSave) {
+        await saveChecklistChanges(checklistToSave);
+      } else {
+        console.error('Could not find checklist to save');
+      }
     }
 
     // Switch to the new list
@@ -86,8 +94,8 @@ export default function Sidebar() {
             <button
               key={list.id}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg transition font-medium ${list.id === currentListId
-                ? 'bg-blue-200 dark:bg-blue-800'
-                : 'bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900'
+                  ? 'bg-blue-200 dark:bg-blue-800'
+                  : 'bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900'
                 }`}
               onClick={() => handleListClick(list.id)}
               disabled={isSwitching}
