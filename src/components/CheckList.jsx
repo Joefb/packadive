@@ -1,16 +1,18 @@
 import { useList } from "../contexts/ListContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 
 const ITEM_STATES = ["Not Ready", "Checked", "Packed"];
 const ITEM_COLORS = {
-  "Not Ready": "bg-white text-gray-900",
+  "Not Ready": "bg-gray-200 text-gray-900",
   "Checked": "bg-blue-500 text-white",
   "Packed": "bg-green-500 text-white",
 };
 
 const CheckList = () => {
-  const { getList, listData, currentListId, setCurrentListId } = useList();
+  const { getList, listData, currentListId, setCurrentListId, listChange, setListChange } = useList();
   const checklist = listData.find(list => list.id === currentListId);
+  const [list, setList] = useState(null);
 
   // Local state for item statuses (initialize all to "Not Ready")
   const [itemStates, setItemStates] = useState(
@@ -26,6 +28,27 @@ const CheckList = () => {
       return nextStates;
     });
   };
+
+  useEffect(() => {
+    setList(checklist);
+  }, [])
+
+  useEffect(() => {
+    if (list?.length !== checklist?.list_items?.length) {
+      setListChange(true);
+      return;
+    }
+
+    const changed = list?.some((item, index) => {
+      const original = checklist?.list_items[index];
+      if (!original) return true; // New item added
+      return (
+        list?.list_items?.status !== checklist?.list_items[index]?.status
+      )
+    })
+
+    setListChange(changed);
+  }, [list, checklist?.list_items]);
 
   if (!checklist) return <div className="text-gray-500">No checklist selected.</div>;
 

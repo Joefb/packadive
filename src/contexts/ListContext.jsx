@@ -21,6 +21,8 @@ export const ListProvider = ({ children }) => {
   const [listData, setListData] = useState([]);
   const { auth_token } = useAuth() || {};
   const [currentListId, setCurrentListId] = useState(null);
+  const [listChange, setListChange] = useState(false);
+
 
   // Get list data from local storage
   useEffect(() => {
@@ -201,6 +203,8 @@ export const ListProvider = ({ children }) => {
     updateList,
     getList,
     createItem,
+    listChange,
+    setListChange,
   }
 
   return (
