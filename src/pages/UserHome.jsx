@@ -67,8 +67,8 @@ const UserHome = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10">
-      <div className="w-full max-w-2xl bg-white rounded-lg shadow-lg p-8">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-1">
+      <div className="w-full max-w-2xl bg-gray-50 rounded-lg shadow-lg p-8">
         <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">User Home</h1>
         <div className="flex justify-end mb-6">
           {listChange && (
@@ -85,6 +85,7 @@ const UserHome = () => {
         </div>
         <CheckList />
       </div>
+      {/* <CheckList /> */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-8 relative">
