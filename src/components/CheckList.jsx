@@ -11,9 +11,9 @@ const ITEM_COLORS = {
 
 const CheckList = () => {
   const { getList, listData, setListData, currentListId, setCurrentListId, listChange, setListChange } = useList();
-  // const checklist = listData.find(list => list?.checklist_id === currentListId);
   const checklist = listData.find(list => list.id === currentListId);
-  const [list, setList] = useState(null);
+  const [originalChecklist, setOriginalChecklist] = useState(null);
+
 
   // Local state for item statuses (initialize all to "Not Ready")
   const [itemStates, setItemStates] = useState(
@@ -28,11 +28,9 @@ const CheckList = () => {
       nextStates[idx] = ITEM_STATES[(currentIdx + 1) % ITEM_STATES.length];
       setListData(prevData => {
         return prevData.map(list => {
-          // if (list?.checklist_id === currentListId && Array.isArray(list?.list_items)) {
           if (list.id === currentListId && Array.isArray(list?.list_items)) {
             return {
               ...list,
-              // checklist_id: list?.checklist_id,
               list_items: list.list_items.map((item, itemIdx) => {
                 return itemIdx === idx ? { ...item, status: nextStates[idx] } : item;
               })
@@ -43,44 +41,39 @@ const CheckList = () => {
         })
 
       })
-      if (list && Array.isArray(list?.list_items)) {
-        const updatedList = {
-          ...list,
-          list_items: list.list_items.map((item, itemIdx) => {
-            return itemIdx === idx ? { ...item, status: nextStates[idx] } : item;
-          })
-        }
-
-        setList(updatedList);
-      }
       return nextStates;
     });
   };
 
+  // Initialize originalChecklist when checklist changes (e.g., when switching lists)
   useEffect(() => {
-    setList(checklist);
-    setItemStates(checklist?.list_items?.map(item => item?.status || "Not Ready") || []);
-  }, [checklist]);
+    if (checklist) {
+      // Deep copy the checklist to store the original state
+      setOriginalChecklist(JSON.parse(JSON.stringify(checklist)));
+      setItemStates(checklist?.list_items?.map(item => item?.status || "Not Ready") || []);
+    }
+  }, [currentListId]); // Only run when currentListId changes, not when checklist changes
+
 
   useEffect(() => {
-    if (!list || !checklist) {
+    if (!checklist || !originalChecklist) {
       setListChange(false);
       return;
     }
 
-    if (list?.list_items?.length !== checklist?.list_items?.length) {
+    if (checklist?.list_items?.length !== originalChecklist?.list_items?.length) {
       setListChange(true);
       return;
     }
 
-    const changed = list?.list_items?.some((item, index) => {
-      const original = checklist?.list_items[index];
+    const changed = checklist?.list_items?.some((item, index) => {
+      const original = originalChecklist?.list_items[index];
       if (!original) return true; // New item added
       return item?.status !== original?.status
     })
 
     setListChange(!!changed);
-  }, [list, checklist]);
+  }, [checklist, originalChecklist, setListChange]);
 
   if (!checklist) return <div className="text-gray-500">No checklist selected.</div>;
 
