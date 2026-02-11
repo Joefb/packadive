@@ -30,6 +30,9 @@ export const ListProvider = ({ children }) => {
 
     if (listData) {
       setListData(JSON.parse(listData));
+      if (JSON.parse(listData)?.length > 0 && !currentListId) {
+        setCurrentListId(JSON.parse(listData)[0].checklist_id);
+      }
     }
   }, []);
 
@@ -198,6 +201,7 @@ export const ListProvider = ({ children }) => {
     listData,
     currentListId,
     setCurrentListId,
+    setListData,
     deleteList,
     createList,
     updateList,

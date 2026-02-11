@@ -10,8 +10,8 @@ const ITEM_COLORS = {
 };
 
 const CheckList = () => {
-  const { getList, listData, currentListId, setCurrentListId, listChange, setListChange } = useList();
-  const checklist = listData.find(list => list.id === currentListId);
+  const { getList, listData, setListData, currentListId, setCurrentListId, listChange, setListChange } = useList();
+  const checklist = listData.find(list => list?.checklist_id === currentListId);
   const [list, setList] = useState(null);
 
   // Local state for item statuses (initialize all to "Not Ready")
@@ -25,30 +25,60 @@ const CheckList = () => {
       const nextStates = [...states];
       const currentIdx = ITEM_STATES.indexOf(states[idx]);
       nextStates[idx] = ITEM_STATES[(currentIdx + 1) % ITEM_STATES.length];
+      setListData(prevData => {
+        return prevData.map(list => {
+          if (list?.checklist_id === currentListId && Array.isArray(list?.list_items)) {
+            return {
+              ...list,
+              // checklist_id: list?.checklist_id,
+              list_items: list.list_items.map((item, itemIdx) => {
+                itemIdx === idx ? { ...item, status: nextStates[idx] } : item;
+              })
+            }
+          };
+
+          return { ...list };
+        })
+
+      })
+      if (list && Array.isArray(list?.list_items)) {
+        const updatedList = {
+          ...list,
+          list_items: list.list_items.map((item, itemIdx) => {
+            return itemIdx === idx ? { ...item, status: nextStates[idx] } : item;
+          })
+        }
+
+        setList(updatedList);
+      }
       return nextStates;
     });
   };
 
   useEffect(() => {
     setList(checklist);
-  }, [])
+    setItemStates(checklist?.list_items?.map(item => item?.status || "Not Ready") || []);
+  }, [checklist]);
 
   useEffect(() => {
-    if (list?.length !== checklist?.list_items?.length) {
+    if (!list || !checklist) {
+      setListChange(false);
+      return;
+    }
+
+    if (list?.list_items?.length !== checklist?.list_items?.length) {
       setListChange(true);
       return;
     }
 
-    const changed = list?.some((item, index) => {
+    const changed = list?.list_items?.some((item, index) => {
       const original = checklist?.list_items[index];
       if (!original) return true; // New item added
-      return (
-        list?.list_items?.status !== checklist?.list_items[index]?.status
-      )
+      return item?.status !== original?.status
     })
 
-    setListChange(changed);
-  }, [list, checklist?.list_items]);
+    setListChange(!!changed);
+  }, [list, checklist]);
 
   if (!checklist) return <div className="text-gray-500">No checklist selected.</div>;
 
@@ -57,12 +87,12 @@ const CheckList = () => {
       <h2 className="text-2xl font-bold mb-4">{checklist.checklist_name}</h2>
       <ul className="flex flex-col gap-2 mt-4">
         {checklist.list_items.map((item, idx) => (
-          <li key={item.id}>
+          <li key={item?.id}>
             <button
               className={`w-full px-4 py-2 rounded transition ${ITEM_COLORS[itemStates[idx]]}`}
               onClick={() => handleItemClick(idx)}
             >
-              {item.item_name} — {itemStates[idx]}
+              {item?.item_name} — {itemStates[idx]}
             </button>
           </li>
         ))}

@@ -61,16 +61,17 @@ export default function Sidebar() {
       )}
       <nav className="flex flex-col gap-2">
         {listData && listData.length > 0 ? (
-          listData.map((list) => (
+          listData.map((list, idx) => (
             <button
+              // key={idx}
+              // key={list?.list_items?.checklist_id}
               key={list.id}
               className="flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900 transition font-medium"
               onClick={() => {
-                setCurrentListId(list.id)
-                if (listChange) {
-                  // Post Request to update list
-                  setListChange(false);
-                }
+                // setCurrentListId(list?.list_items?.checklist_id);
+                setCurrentListId(list.id);
+                // Post Request to update list
+                setListChange(false);
               }
               }
             >
