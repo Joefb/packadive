@@ -11,7 +11,8 @@ const ITEM_COLORS = {
 
 const CheckList = () => {
   const { getList, listData, setListData, currentListId, setCurrentListId, listChange, setListChange } = useList();
-  const checklist = listData.find(list => list?.checklist_id === currentListId);
+  // const checklist = listData.find(list => list?.checklist_id === currentListId);
+  const checklist = listData.find(list => list.id === currentListId);
   const [list, setList] = useState(null);
 
   // Local state for item statuses (initialize all to "Not Ready")
@@ -27,17 +28,18 @@ const CheckList = () => {
       nextStates[idx] = ITEM_STATES[(currentIdx + 1) % ITEM_STATES.length];
       setListData(prevData => {
         return prevData.map(list => {
-          if (list?.checklist_id === currentListId && Array.isArray(list?.list_items)) {
+          // if (list?.checklist_id === currentListId && Array.isArray(list?.list_items)) {
+          if (list.id === currentListId && Array.isArray(list?.list_items)) {
             return {
               ...list,
               // checklist_id: list?.checklist_id,
               list_items: list.list_items.map((item, itemIdx) => {
-                itemIdx === idx ? { ...item, status: nextStates[idx] } : item;
+                return itemIdx === idx ? { ...item, status: nextStates[idx] } : item;
               })
             }
           };
 
-          return { ...list };
+          return list;
         })
 
       })
