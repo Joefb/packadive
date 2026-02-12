@@ -187,6 +187,53 @@ export const ListProvider = ({ children }) => {
 
   }, [auth_token, listData, getList]);
 
+  // Delete Item
+  const deleteItem = useCallback(async (itemId) => {
+    if (!auth_token) {
+      console.error('No auth token found.');
+      return;
+    }
+
+    try {
+      // Include itemId in the URL path
+      const response = await fetch(`${API_ITEMS}/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + auth_token
+        },
+        // body: JSON.stringify({
+        //   status: newStatus,
+        // })
+      });
+
+      const currentList = listData.find(list => list.checklist_id === currentListId);
+      const updatedListItems = currentList.list_items.filter(item => item.id !== itemId);
+      const updatedList = { ...currentList, list_items: updatedListItems };
+      setListData(previousList => {
+        return previousList?.map(list => {
+          if (list.checklist_id === currentListId) {
+            return updatedList;
+          } else {
+            return list;
+          }
+        })
+      });
+
+      localStorage.setItem('list_data', JSON.stringify(updatedListItems));
+      await getList();
+
+      const responseData = await response.json();
+      console.log('Item deleted:', responseData);
+      // return responseData;
+
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      throw error;
+    }
+
+  }, [auth_token, listData, getList]);
+
   // const updateItem = useCallback(async (itemId, itemName) => {
   //   // item_name=data["item_name"],
   //   // status=data["status"],
@@ -272,6 +319,7 @@ export const ListProvider = ({ children }) => {
     updateList,
     getList,
     createItem,
+    deleteItem,
     updateItemStatus,
     saveChecklistChanges,
     listChange,

@@ -11,9 +11,10 @@ const ITEM_COLORS = {
 };
 
 const CheckList = () => {
-  const { getList, listData, setListData, currentListId, setCurrentListId, listChange, setListChange } = useList();
+  const { deleteItem, getList, listData, setListData, currentListId, setCurrentListId, listChange, setListChange } = useList();
   const checklist = listData.find(list => list.id === currentListId);
   const [originalChecklist, setOriginalChecklist] = useState(null);
+  let holdTimeout = null;
 
 
   // Local state for item statuses (initialize all to "Not Ready")
@@ -76,6 +77,24 @@ const CheckList = () => {
     setListChange(!!changed);
   }, [checklist, originalChecklist, setListChange]);
 
+  const startHoldTimer = (idx) => {
+    holdTimeout = setTimeout(() => {
+      // Do api call here
+      handleHold(idx)
+    }, 2000); // 2 seconds hold time
+  }
+
+  const clearHoldTimer = () => {
+    clearTimeout(holdTimeout);
+    holdTimeout = null;
+  }
+
+  const handleHold = (itemId) => {
+    console.log("Item held for 2 seconds:", itemId);
+    deleteItem(itemId);
+  }
+
+
   if (!checklist) return <div className="text-gray-500">No checklist selected.</div>;
 
   return (
@@ -87,9 +106,14 @@ const CheckList = () => {
           <li key={item?.id}>
             <button
               className={`w-full px-4 py-2 rounded transition ${ITEM_COLORS[itemStates[idx]]}`}
-              onClick={() => handleItemClick(idx)}
+              onClick={() => handleItemClick(item?.id)}
+              onMouseDown={() => startHoldTimer(item?.id)}
+              onMouseUp={clearHoldTimer}
+              onMouseLeave={clearHoldTimer}
+              onTouchStart={() => startHoldTimer(item?.id)}
+              onTouchEnd={clearHoldTimer}
             >
-              {item?.item_name} — {itemStates[idx]}
+              {item?.item_name} — {itemStates[item?.id]}
             </button>
           </li>
         ))}
