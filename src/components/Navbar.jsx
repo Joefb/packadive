@@ -1,4 +1,5 @@
 import { useAuth } from "../contexts/AuthContext";
+import { useList } from "../contexts/ListContext";
 import { Progress, Typography } from "@material-tailwind/react";
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -7,6 +8,7 @@ export default function Navbar() {
   const { isAuthenticated, logout, user } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const { totalProgress } = useList();
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -50,10 +52,10 @@ export default function Navbar() {
               Packed and Ready
             </Typography>
             <Typography color="blue-gray" variant="h6">
-              50%
+              {totalProgress}%
             </Typography>
           </div>
-          <Progress value={50} />
+          <Progress value={totalProgress} color="green" />
         </div>
       )}
 

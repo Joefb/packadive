@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { useMemo, createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 
 // Endpoints:
@@ -36,6 +36,25 @@ export const ListProvider = ({ children }) => {
       }
     }
   }, []);
+
+  // Get the total progress
+  const totalProgress = useMemo(() => {
+    let totalItems = 0;
+    let packedItems = 0;
+
+    listData.forEach(list => {
+      totalItems += list.list_items.length;
+
+      list.list_items.forEach(item => {
+        if (item.status === "Packed") {
+          packedItems++;
+        }
+      });
+    });
+
+    // Return the percentage (handle division by zero)
+    return totalItems > 0 ? Math.round((packedItems / totalItems) * 100) : 0;
+  }, [listData]);
 
   ///// CHECKLIST FUNCTIONS /////
   // Get list function
@@ -324,6 +343,7 @@ export const ListProvider = ({ children }) => {
     saveChecklistChanges,
     listChange,
     setListChange,
+    totalProgress,
   }
 
   return (

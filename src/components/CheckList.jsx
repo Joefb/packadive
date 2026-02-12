@@ -14,6 +14,8 @@ const CheckList = () => {
   const { deleteItem, getList, listData, setListData, currentListId, setCurrentListId, listChange, setListChange } = useList();
   const checklist = listData.find(list => list.id === currentListId);
   const [originalChecklist, setOriginalChecklist] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [itemToDeleteId, setItemToDeleteId] = useState(null);
   let holdTimeout = null;
 
   const handleItemClick = (itemId) => {
@@ -70,8 +72,9 @@ const CheckList = () => {
 
   const startHoldTimer = (idx) => {
     holdTimeout = setTimeout(() => {
+      setItemToDeleteId(idx);
       // Do api call here
-      handleHold(idx)
+      handleHold()
     }, 2000); // 2 seconds hold time
   }
 
@@ -80,9 +83,14 @@ const CheckList = () => {
     holdTimeout = null;
   }
 
-  const handleHold = (itemId) => {
-    console.log("Item held for 2 seconds:", itemId);
-    deleteItem(itemId);
+  const handleHold = () => {
+    setShowDeleteModal(true);
+  }
+
+  const handleDelete = async () => {
+    await deleteItem(itemToDeleteId);
+    setItemToDeleteId(null);
+    setShowDeleteModal(false);
   }
 
 
@@ -90,6 +98,28 @@ const CheckList = () => {
 
   return (
     <div>
+      {showDeleteModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+          <div className="bg-white p-8 rounded-lg shadow-2xl relative w-full max-w-md mx-4">
+            <button
+              className="w-full py-3 mb-4 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors duration-200 shadow focus:outline-none focus:ring-2 focus:ring-red-400"
+              onClick={() => {
+                handleDelete();
+              }}
+            >
+              Delete Item
+            </button>
+            <button
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl font-bold focus:outline-none"
+              onClick={() => setShowDeleteModal(false)}
+              aria-label="Close"
+            >
+              &times;
+            </button>
+          </div>
+        </div>
+      )}
+
       <h2 className="text-2xl font-bold mb-4">{checklist.checklist_name}</h2>
       <Progress
         label="Packed"
@@ -119,3 +149,24 @@ const CheckList = () => {
 }
 
 export default CheckList
+
+
+// {showDeleteModal && (
+//   <div className="bg-white p-8 rounded shadow-lg relative w-full m-10">
+//     <button
+//       className=""
+//       onClick={() => {
+//         handleDelete();
+//       }}
+//     >
+//       Delete Item
+//     </button>
+//     <button
+//       className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+//       onClick={() => setShowDeleteModal(false)}
+//     >
+//       &times;
+//     </button>
+//   </div>
+// )}
+//
