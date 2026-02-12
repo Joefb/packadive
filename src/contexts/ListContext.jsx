@@ -207,12 +207,12 @@ export const ListProvider = ({ children }) => {
         // })
       });
 
-      const currentList = listData.find(list => list.checklist_id === currentListId);
-      const updatedListItems = currentList.list_items.filter(item => item.id !== itemId);
+      const currentList = listData?.find(list => list?.id === currentListId);
+      const updatedListItems = currentList?.list_items?.filter(item => item?.id !== itemId);
       const updatedList = { ...currentList, list_items: updatedListItems };
       setListData(previousList => {
         return previousList?.map(list => {
-          if (list.checklist_id === currentListId) {
+          if (list?.id === currentListId) {
             return updatedList;
           } else {
             return list;
