@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useAuth } from "../contexts/AuthContext";
+import { useList } from "../contexts/ListContext";
 
 const Profile = () => {
   const { user, updateUser } = useAuth();
+  const { stats } = useList();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -44,6 +46,12 @@ const Profile = () => {
       <p className="mb-6 text-gray-700">
         <strong className="font-semibold">Email:</strong> {user?.email}
       </p>
+      <div className="mb-6 p-4 bg-gray-100 rounded">
+        Total Items Packed: <span className="font-semibold">{stats.totalPacked}</span><br />
+        Total Items: <span className="font-semibold">{stats.totalItems}</span><br />
+        Total Lists: <span className="font-semibold">{stats.totalLists}</span>
+      </div>
+
       <form onSubmit={handleEmailUpdate} className="mb-6">
         <label className="block mb-2 text-gray-700 font-semibold">
           Email:

@@ -37,6 +37,25 @@ export const ListProvider = ({ children }) => {
     }
   }, []);
 
+  // User Statu
+  const stats = useMemo(() => {
+    let totalLists = listData.length;
+    let totalItems = 0;
+    let packedItems = 0;
+
+    listData.forEach(list => {
+      totalItems += list.list_items.length;
+
+      list.list_items.forEach(item => {
+        if (item.status === "Packed") {
+          packedItems++;
+        }
+      });
+    });
+
+    return { totalLists, totalItems, packedItems };
+  }, [listData]);
+
   // Get the total progress
   const totalProgress = useMemo(() => {
     let totalItems = 0;
@@ -331,6 +350,7 @@ export const ListProvider = ({ children }) => {
   const value = {
     listData,
     currentListId,
+    stats,
     setCurrentListId,
     setListData,
     deleteList,
