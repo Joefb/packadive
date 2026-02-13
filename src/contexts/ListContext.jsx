@@ -282,9 +282,10 @@ export const ListProvider = ({ children }) => {
   // const deleteItem = useCallback(async (itemId) => {
   //
   // }, []);
+
   // Update Item Status
-  // Update Item Status
-  const updateItemStatus = useCallback(async (itemId, newStatus) => {
+  // const updateItemStatus = useCallback(async (itemId, newStatus, newName) => {
+  const updateItemStatus = useCallback(async (itemObject) => {
     if (!auth_token) {
       console.error('No auth token found.');
       return;
@@ -292,18 +293,26 @@ export const ListProvider = ({ children }) => {
 
     try {
       // Include itemId in the URL path
-      const response = await fetch(`${API_ITEMS}/${itemId}`, {
+      const response = await fetch(`${API_ITEMS}/${itemObject.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + auth_token
         },
-        body: JSON.stringify({
-          status: newStatus,
-        })
+        body: JSON.stringify(itemObject)
       });
       const responseData = await response.json();
       console.log('Item updated:', responseData);
+      // await saveChecklistChanges(responseData);
+      setListData(previousList => {
+        return previousList?.map(list => {
+          if (list?.id === responseData?.checklist_id) {
+            return responseData;
+          } else {
+            return list;
+          }
+        })
+      })
       return responseData;
     } catch (error) {
       console.error('Error updating item:', error);

@@ -76,14 +76,8 @@ const UserHome = () => {
               Unsaved changes
             </span>
           )}
-          <button
-            onClick={() => setShowModal(true)}
-            className="px-5 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
-          >
-            Add Item
-          </button>
         </div>
-        <CheckList />
+        <CheckList setShowModal={setShowModal} />
       </div>
       {/* <CheckList /> */}
       {showModal && (
@@ -119,3 +113,12 @@ const UserHome = () => {
 }
 
 export default UserHome
+
+
+// <button
+//   onClick={() => setShowModal(true)}
+//   className="px-5 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
+// >
+//   Add Item
+// </button>
+

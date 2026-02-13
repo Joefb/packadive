@@ -11,18 +11,19 @@ const ITEM_COLORS = {
   "Packed": "bg-green-500 text-white",
 };
 
-const CheckList = () => {
+const CheckList = ({ setShowModal }) => {
   // const [items, setItems] = useState([0, 1, 2])
   const [parent, enableAnimations] = useAutoAnimate()
   // const add = () => setItems([...items, items.length])
 
-  const { deleteItem, getList, listData, setListData, currentListId, setCurrentListId, listChange, setListChange } = useList();
+  const { deleteItem, updateItemStatus, getList, listData, setListData, currentListId, setCurrentListId, listChange, setListChange } = useList();
   const checklist = listData.find(list => list.id === currentListId);
   const [originalChecklist, setOriginalChecklist] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [itemToDeleteId, setItemToDeleteId] = useState(null);
+  const [itemToModifyId, setItemToModifyId] = useState(null);
   let holdTimeout = null;
   const [sortedList, setSortedList] = useState([]);
+  const [updateItemName, setUpdateItemName] = useState(false);
 
   const statusOrder = {
     "Not Ready": 0,
@@ -87,9 +88,16 @@ const CheckList = () => {
     setListChange(!!changed);
   }, [checklist, originalChecklist, setListChange]);
 
+  // Set inupt to name of item
+  useEffect(() => {
+    setUpdateItemName(checklist?.list_items?.find(item => item?.id === itemToModifyId)?.item_name || '')
+
+
+  }, [showDeleteModal])
+
   const startHoldTimer = (idx) => {
     holdTimeout = setTimeout(() => {
-      setItemToDeleteId(idx);
+      setItemToModifyId(idx);
       // Do api call here
       handleHold()
     }, 2000); // 2 seconds hold time
@@ -105,8 +113,16 @@ const CheckList = () => {
   }
 
   const handleDelete = async () => {
-    await deleteItem(itemToDeleteId);
-    setItemToDeleteId(null);
+    await deleteItem(itemToModifyId);
+    setItemToModifyId(null);
+    setShowDeleteModal(false);
+  }
+
+  const handleUpdateItemName = async (newName) => {
+    const itemToUpdate = checklist.list_items.find(item => item.id === itemToModifyId);
+
+    await updateItemStatus({ ...itemToUpdate, item_name: newName });
+    setItemToModifyId(null);
     setShowDeleteModal(false);
   }
 
@@ -118,6 +134,22 @@ const CheckList = () => {
       {showDeleteModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
           <div className="bg-white p-8 rounded-lg shadow-2xl relative w-full max-w-md mx-4">
+            <div>
+              <input
+                type="text"
+                value={updateItemName}
+                className="w-full mb-4 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                onChange={e => {
+                  setUpdateItemName(e.target.value);
+                }}
+              />
+              <button
+                className="w-full py-3 mb-4 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors duration-200 shadow focus:outline-none focus:ring-2 focus:ring-red-400"
+                onClick={() => {
+                  handleUpdateItemName(updateItemName);
+                }}
+              >Rename</button>
+            </div>
             <button
               className="w-full py-3 mb-4 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors duration-200 shadow focus:outline-none focus:ring-2 focus:ring-red-400"
               onClick={() => {
@@ -137,7 +169,16 @@ const CheckList = () => {
         </div>
       )}
 
-      <h2 className="text-2xl font-bold mb-4">{checklist.checklist_name}</h2>
+      <div>
+        <h2 className="text-2xl font-bold mb-4">{checklist.checklist_name}</h2>
+        <button
+          onClick={() => setShowModal(true)}
+          className="px-5 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
+        >
+          Add Item
+        </button>
+      </div>
+
       <Progress
         label="Packed"
         value={Math.round((checklist.list_items.filter(item => item.status === "Packed").length / checklist.list_items.length) * 100)}
