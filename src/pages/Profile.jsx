@@ -47,7 +47,7 @@ const Profile = () => {
         <strong className="font-semibold">Email:</strong> {user?.email}
       </p>
       <div className="mb-6 p-4 bg-gray-100 rounded">
-        Total Items Packed: <span className="font-semibold">{stats.totalPacked}</span><br />
+        Total Items Packed: <span className="font-semibold">{stats.packedItems}</span><br />
         Total Items: <span className="font-semibold">{stats.totalItems}</span><br />
         Total Lists: <span className="font-semibold">{stats.totalLists}</span>
       </div>

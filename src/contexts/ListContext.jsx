@@ -37,7 +37,7 @@ export const ListProvider = ({ children }) => {
     }
   }, []);
 
-  // User Statu
+  // User Stats
   const stats = useMemo(() => {
     let totalLists = listData.length;
     let totalItems = 0;

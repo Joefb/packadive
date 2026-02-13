@@ -17,6 +17,18 @@ const CheckList = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [itemToDeleteId, setItemToDeleteId] = useState(null);
   let holdTimeout = null;
+  const [sortedList, setSortedList] = useState([]);
+
+  const statusOrder = {
+    "Not Ready": 0,
+    "Checked": 1,
+    "Packed": 2
+  }
+
+  useEffect(() => {
+    setSortedList([...(checklist?.list_items || [])].sort((a, b) => statusOrder[a.status] - statusOrder[b.status]));
+
+  }, [checklist]);
 
   const handleItemClick = (itemId) => {
     setListData(prevData => {
@@ -128,7 +140,7 @@ const CheckList = () => {
         className="mb-4"
       />
       <ul className="flex flex-col gap-2 mt-4">
-        {checklist.list_items.map((item, idx) => (
+        {sortedList?.map((item, idx) => (
           <li key={item?.id}>
             <button
               className={`w-full px-4 py-2 rounded transition ${ITEM_COLORS[item.status]}`}
