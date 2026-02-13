@@ -122,6 +122,7 @@ const CheckList = ({ setShowModal }) => {
     const itemToUpdate = checklist.list_items.find(item => item.id === itemToModifyId);
 
     await updateItemStatus({ ...itemToUpdate, item_name: newName });
+    await getList();
     setItemToModifyId(null);
     setShowDeleteModal(false);
   }

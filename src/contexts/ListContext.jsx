@@ -304,15 +304,15 @@ export const ListProvider = ({ children }) => {
       const responseData = await response.json();
       console.log('Item updated:', responseData);
       // await saveChecklistChanges(responseData);
-      setListData(previousList => {
-        return previousList?.map(list => {
-          if (list?.id === responseData?.checklist_id) {
-            return responseData;
-          } else {
-            return list;
-          }
-        })
-      })
+      // setListData(previousList => {
+      //   return previousList?.map(list => {
+      //     if (list?.id === responseData?.checklist_id) {
+      //       return responseData;
+      //     } else {
+      //       return list;
+      //     }
+      //   })
+      // })
       return responseData;
     } catch (error) {
       console.error('Error updating item:', error);
