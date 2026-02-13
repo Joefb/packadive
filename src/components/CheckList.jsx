@@ -1,6 +1,7 @@
 import { useList } from "../contexts/ListContext";
 import { useState, useEffect } from "react";
 import { Progress } from "@material-tailwind/react";
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 
 
 const ITEM_STATES = ["Not Ready", "Checked", "Packed"];
@@ -11,6 +12,10 @@ const ITEM_COLORS = {
 };
 
 const CheckList = () => {
+  // const [items, setItems] = useState([0, 1, 2])
+  const [parent, enableAnimations] = useAutoAnimate()
+  // const add = () => setItems([...items, items.length])
+
   const { deleteItem, getList, listData, setListData, currentListId, setCurrentListId, listChange, setListChange } = useList();
   const checklist = listData.find(list => list.id === currentListId);
   const [originalChecklist, setOriginalChecklist] = useState(null);
@@ -139,7 +144,7 @@ const CheckList = () => {
         color="green"
         className="mb-4"
       />
-      <ul className="flex flex-col gap-2 mt-4">
+      <ul className="flex flex-col gap-2 mt-4" ref={parent}>
         {sortedList?.map((item, idx) => (
           <li key={item?.id}>
             <button
