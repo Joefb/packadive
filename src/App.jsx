@@ -8,6 +8,7 @@ import RegisterUser from "./pages/RegisterUser"
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UserHome from "./pages/UserHome";
+import DiveConditions from "./pages/DiveConditions";
 
 export default function App() {
   const { isAuthenticated, logout, } = useAuth();
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/login" element={<UserLogin />} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/userhome" element={<ProtectedRoute><UserHome /></ProtectedRoute>} />
+          <Route path="/diveconditions" element={<ProtectedRoute><DiveConditions /></ProtectedRoute>} />
         </Routes>
       </Layout>
     </BrowserRouter>
