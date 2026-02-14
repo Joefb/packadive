@@ -21,6 +21,107 @@ const DiveConditions = () => {
   const [locationData, setLocationData] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
   const [marineData, setMarineData] = useState(null);
+  const [waterTemp, setWaterTemp] = useState(null);
+
+  // NOAA Station coordinates (major diving locations)
+  const noaaStations = [
+    { id: "9414290", name: "San Francisco", lat: 37.806, lon: -122.465 },
+    { id: "9413450", name: "Monterey", lat: 36.605, lon: -121.888 },
+    { id: "9410840", name: "San Diego", lat: 32.714, lon: -117.173 },
+    { id: "9410660", name: "Los Angeles", lat: 33.720, lon: -118.273 },
+    { id: "9410230", name: "La Jolla", lat: 32.867, lon: -117.257 },
+    { id: "9447130", name: "Seattle", lat: 47.601, lon: -122.339 },
+    { id: "8724580", name: "Key West", lat: 24.551, lon: -81.808 },
+    { id: "8723214", name: "Virginia Key", lat: 25.731, lon: -80.161 },
+    { id: "8518750", name: "New York", lat: 40.700, lon: -74.015 },
+    { id: "8452660", name: "Newport", lat: 41.505, lon: -71.327 },
+    { id: "8443970", name: "Boston", lat: 42.354, lon: -71.053 },
+    { id: "8658120", name: "Wilmington NC", lat: 34.227, lon: -77.953 },
+    { id: "8670870", name: "Fort Pulaski GA", lat: 32.033, lon: -80.900 },
+    { id: "8729108", name: "Panama City", lat: 30.152, lon: -85.667 },
+    { id: "1612340", name: "Honolulu", lat: 21.307, lon: -157.867 },
+    { id: "1615680", name: "Mokuoloe", lat: 21.433, lon: -157.800 },
+  ];
+
+  // Calculate distance between two coordinates (Haversine formula)
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Earth's radius in km
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  // Find nearest NOAA station
+  const findNearestStation = (lat, lon) => {
+    let nearest = null;
+    let minDistance = Infinity;
+
+    noaaStations.forEach((station) => {
+      const distance = calculateDistance(lat, lon, station.lat, station.lon);
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearest = { ...station, distance };
+      }
+    });
+
+    // Only return if within 100km (reasonable for coastal diving)
+    return minDistance < 100 ? nearest : null;
+  };
+
+  // Fetch water temperature from NOAA
+  const fetchNOAAWaterTemp = async (lat, lon) => {
+    const station = findNearestStation(lat, lon);
+
+    if (!station) {
+      console.log("No NOAA station nearby, using estimates");
+      return null;
+    }
+
+    try {
+      const today = new Date();
+      const dateStr = today.toISOString().split("T")[0].replace(/-/g, "");
+
+      const response = await fetch(
+        `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?` +
+        `station=${station.id}&` +
+        `product=water_temperature&` +
+        `date=latest&` +
+        `units=english&` +
+        `time_zone=gmt&` +
+        `application=packadive&` +
+        `format=json`
+      );
+
+      if (!response.ok) {
+        console.log("NOAA API error:", response.status);
+        return null;
+      }
+
+      const data = await response.json();
+
+      if (data.data && data.data.length > 0) {
+        const temp = parseFloat(data.data[0].v);
+        return {
+          temperature: temp,
+          stationName: station.name,
+          distance: station.distance.toFixed(1),
+          time: data.data[0].t,
+        };
+      }
+
+      return null;
+    } catch (err) {
+      console.error("NOAA fetch error:", err);
+      return null;
+    }
+  };
 
   // Geocoding: Convert city/state to lat/lon
   const searchLocation = async () => {
@@ -35,6 +136,7 @@ const DiveConditions = () => {
     setMarineData(null);
     setLocationData(null);
     setLocationResults([]);
+    setWaterTemp(null);
 
     try {
       // Open-Meteo Geocoding API - get multiple results
@@ -101,10 +203,14 @@ const DiveConditions = () => {
     setLocationData(location);
 
     try {
-      await Promise.all([
+      // Fetch all data in parallel
+      const [weatherResult, marineResult, waterTempResult] = await Promise.all([
         fetchWeatherData(location.latitude, location.longitude),
         fetchMarineData(location.latitude, location.longitude),
+        fetchNOAAWaterTemp(location.latitude, location.longitude),
       ]);
+
+      setWaterTemp(waterTempResult);
     } catch (err) {
       setError(err.message || "An error occurred while fetching data");
     } finally {
@@ -254,6 +360,27 @@ const DiveConditions = () => {
     const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
     const index = Math.round(degrees / 45) % 8;
     return directions[index];
+  };
+
+  // Get estimated water temperature based on latitude (fallback)
+  const getEstimatedWaterTemp = (latitude) => {
+    if (latitude > 32 && latitude < 40) {
+      return "55-62°F"; // California coast
+    } else if (latitude >= 40) {
+      return "48-55°F"; // Pacific Northwest (colder)
+    } else if (latitude >= 25 && latitude < 32) {
+      return "65-75°F"; // Southern US coast (warmer)
+    } else {
+      return "60-70°F"; // Default/tropical
+    }
+  };
+
+  // Get water temperature display (real or estimated)
+  const getWaterTempDisplay = () => {
+    if (waterTemp && waterTemp.temperature) {
+      return `${waterTemp.temperature.toFixed(1)}°F`;
+    }
+    return locationData ? getEstimatedWaterTemp(locationData.latitude) : "N/A";
   };
 
   const handleKeyPress = (e) => {
@@ -487,6 +614,23 @@ const DiveConditions = () => {
                             : "N/A"}
                         </Typography>
                       </div>
+                      <div className="flex justify-between items-center border-t pt-3">
+                        <Typography className="text-gray-700">
+                          🌡️ Water Temp:
+                        </Typography>
+                        <Typography className="font-bold text-lg text-cyan-700">
+                          {getWaterTempDisplay()}
+                        </Typography>
+                      </div>
+                      {waterTemp && waterTemp.temperature ? (
+                        <Typography variant="small" className="text-gray-500 italic">
+                          *From NOAA {waterTemp.stationName} station ({waterTemp.distance} km away)
+                        </Typography>
+                      ) : (
+                        <Typography variant="small" className="text-gray-500 italic">
+                          *Estimated seasonal range
+                        </Typography>
+                      )}
                     </div>
                   </CardBody>
                 </Card>
@@ -596,10 +740,10 @@ const DiveConditions = () => {
                               ].toFixed(1)} m`
                               : "N/A"}
                           </Typography>
-                          <Typography variant="small" className="text-gray-600">
+                          <Typography variant="small" className="text-gray-600 mb-1">
                             Wave Height
                           </Typography>
-                          <Typography variant="small" className="text-gray-600 mt-2">
+                          <Typography variant="small" className="text-gray-600">
                             Period:{" "}
                             {marineData.daily.wave_period_max[index]
                               ? `${marineData.daily.wave_period_max[
@@ -616,6 +760,14 @@ const DiveConditions = () => {
                               )
                               : "N/A"}
                           </Typography>
+                          <div className="mt-2 pt-2 border-t border-blue-200 w-full text-center">
+                            <Typography variant="small" className="text-cyan-700 font-semibold">
+                              🌡️ {getWaterTempDisplay()}
+                            </Typography>
+                            <Typography variant="small" className="text-gray-500">
+                              Water Temp
+                            </Typography>
+                          </div>
                         </div>
                       ))}
                     </div>
