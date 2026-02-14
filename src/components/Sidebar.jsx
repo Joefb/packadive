@@ -73,6 +73,13 @@ export default function Sidebar() {
 
   const currentList = listData.find(list => list.id === targetId);
 
+  // Calculate progress percentage for a checklist
+  const calculateProgress = (list) => {
+    if (!list.list_items || list.list_items.length === 0) return 0;
+    const packedCount = list.list_items.filter(item => item.status === "Packed").length;
+    return Math.round((packedCount / list.list_items.length) * 100);
+  };
+
   return (
     <div className="flex flex-col h-full p-4">
       <button
@@ -121,27 +128,51 @@ export default function Sidebar() {
 
       <nav className="flex flex-col gap-2">
         {listData && listData.length > 0 ? (
-          listData.map((list) => (
-            <button
-              key={list.id}
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition font-medium ${list.id === currentListId
-                ? 'bg-blue-200 dark:bg-blue-800'
-                : 'bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900'
-                }`}
-              onClick={() => handleListClick(list.id)}
-              onMouseDown={() => startHold(list.id)}
-              onMouseUp={cancelHold}
-              onMouseLeave={cancelHold}
-              onTouchStart={() => startHold(list.id)}
-              onTouchEnd={cancelHold}
-              disabled={isSwitching}
-            >
-              {list.checklist_name}
-              {list.id === currentListId && listChange && (
-                <span className="ml-auto text-xs text-orange-600 dark:text-orange-400">●</span>
-              )}
-            </button>
-          ))
+          listData.map((list) => {
+            const progress = calculateProgress(list);
+            const isComplete = progress === 100;
+
+            return (
+              <button
+                key={list.id}
+                className={`relative overflow-hidden flex items-center gap-3 px-3 py-2 rounded-lg transition font-medium ${list.id === currentListId
+                    ? 'bg-blue-200 dark:bg-blue-800'
+                    : 'bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900'
+                  }`}
+                onClick={() => handleListClick(list.id)}
+                onMouseDown={() => startHold(list.id)}
+                onMouseUp={cancelHold}
+                onMouseLeave={cancelHold}
+                onTouchStart={() => startHold(list.id)}
+                onTouchEnd={cancelHold}
+                disabled={isSwitching}
+              >
+                {/* Progress bar background */}
+                <div
+                  className={`absolute inset-0 transition-all duration-300 ${isComplete
+                      ? 'bg-green-400 dark:bg-green-600'
+                      : 'bg-blue-400 dark:bg-blue-600'
+                    }`}
+                  style={{ width: `${progress}%` }}
+                />
+
+                {/* Content overlay */}
+                <span className="relative z-10 flex-1 text-left">
+                  {list.checklist_name}
+                </span>
+
+                {/* Indicators */}
+                <div className="relative z-10 flex items-center gap-2">
+                  {list.id === currentListId && listChange && (
+                    <span className="text-xs text-orange-600 dark:text-orange-400">●</span>
+                  )}
+                  <span className="text-xs font-semibold">
+                    {progress}%
+                  </span>
+                </div>
+              </button>
+            );
+          })
         ) : (
           <span className="text-gray-500">No checklists found.</span>
         )}
