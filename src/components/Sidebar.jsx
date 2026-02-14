@@ -15,8 +15,10 @@ export default function Sidebar() {
   const navigate = useNavigate();
 
   const handleCreateList = async () => {
+    // Save current list if there are unsaved changes before creating a new list
     if (listChange && currentListId) {
       const checklistToSave = listData.find(list => list.id === currentListId);
+
       if (checklistToSave) {
         await saveChecklistChanges(checklistToSave);
       }

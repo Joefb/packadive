@@ -127,9 +127,12 @@ const CheckList = ({ setShowModal }) => {
 
 
   if (!checklist) return <div className="text-gray-500">No checklists found. Add a checklist!</div>;
-  const packedPercent = Math.round(
-    (checklist.list_items.filter(item => item.status === "Packed").length / checklist.list_items.length) * 100
-  );
+
+  const packedPercent = checklist.list_items.length === 0
+    ? 0
+    : Math.round(
+      (checklist.list_items.filter(item => item.status === "Packed").length / checklist.list_items.length) * 100
+    );
 
   return (
     <div>
