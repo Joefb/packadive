@@ -2,9 +2,12 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useList } from "../contexts/ListContext";
 import { useAuth } from "../contexts/AuthContext";
+import EditModal from "./EditModal";
+import { useHoldToEdit } from "../hooks/useHoldToEdit";
 
 export default function Sidebar() {
-  const { getList, createList, listData, currentListId, setCurrentListId, listChange, setListChange, saveChecklistChanges } = useList();
+  const { deleteList, updateList, getList, createList, listData, currentListId, setCurrentListId, listChange, setListChange, saveChecklistChanges } = useList();
+  const { showModal, targetId, startHold, cancelHold, closeModal } = useHoldToEdit();
   const { auth_token } = useAuth();
   const [listName, setListName] = useState('');
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -51,6 +54,23 @@ export default function Sidebar() {
     }
   }, [auth_token, getList]);
 
+  const handleRenameList = async (newName) => {
+    if (targetId && newName.trim()) {
+      await updateList(targetId, newName);
+      await getList();
+    }
+    closeModal();
+  };
+
+  const handleDeleteList = async () => {
+    if (targetId) {
+      await deleteList(targetId);
+    }
+    closeModal();
+  };
+
+  const currentList = listData.find(list => list.id === targetId);
+
   return (
     <div className="flex flex-col h-full p-4">
       <button
@@ -88,9 +108,18 @@ export default function Sidebar() {
           </div>
         </div>
       )}
+      <EditModal
+        isOpen={showModal}
+        onClose={closeModal}
+        itemName={currentList?.checklist_name || ''}
+        onRename={handleRenameList}
+        onDelete={handleDeleteList}
+        entityType="checklist"
+      />
+
       <nav className="flex flex-col gap-2">
         {listData && listData.length > 0 ? (
-          listData.map((list, idx) => (
+          listData.map((list) => (
             <button
               key={list.id}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg transition font-medium ${list.id === currentListId
@@ -98,6 +127,11 @@ export default function Sidebar() {
                   : 'bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900'
                 }`}
               onClick={() => handleListClick(list.id)}
+              onMouseDown={() => startHold(list.id)}
+              onMouseUp={cancelHold}
+              onMouseLeave={cancelHold}
+              onTouchStart={() => startHold(list.id)}
+              onTouchEnd={cancelHold}
               disabled={isSwitching}
             >
               {list.checklist_name}
@@ -113,3 +147,30 @@ export default function Sidebar() {
     </div>
   );
 }
+
+
+
+
+{/* <nav className="flex flex-col gap-2"> */ }
+{/*   {listData && listData.length > 0 ? ( */ }
+{/*     listData.map((list, idx) => ( */ }
+{/*       <button */ }
+{/*         key={list.id} */ }
+{/*         className={`flex items-center gap-3 px-3 py-2 rounded-lg transition font-medium ${list.id === currentListId */ }
+{/*           ? 'bg-blue-200 dark:bg-blue-800' */ }
+{/*           : 'bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900' */ }
+{/*           }`} */ }
+{/*         onClick={() => handleListClick(list.id)} */ }
+{/*         disabled={isSwitching} */ }
+{/*       > */ }
+{/*         {list.checklist_name} */ }
+{/*         {list.id === currentListId && listChange && ( */ }
+{/*           <span className="ml-auto text-xs text-orange-600 dark:text-orange-400">●</span> */ }
+{/*         )} */ }
+{/*       </button> */ }
+{/*     )) */ }
+{/*   ) : ( */ }
+{/*     <span className="text-gray-500">No checklists found.</span> */ }
+{/*   )} */ }
+{/* </nav> */ }
+{/**/ }

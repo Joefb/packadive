@@ -91,8 +91,6 @@ const CheckList = ({ setShowModal }) => {
   // Set inupt to name of item
   useEffect(() => {
     setUpdateItemName(checklist?.list_items?.find(item => item?.id === itemToModifyId)?.item_name || '')
-
-
   }, [showDeleteModal])
 
   const startHoldTimer = (idx) => {

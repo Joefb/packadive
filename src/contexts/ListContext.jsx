@@ -130,20 +130,21 @@ export const ListProvider = ({ children }) => {
   }, [auth_token, getList]);
 
   // Update Checklist Name
+  // const response = await fetch(`${API_ITEMS}/${itemId}`, {
   const updateList = useCallback(async (checkListID, checklistName) => {
     if (!auth_token) {
       console.error('No auth token found.');
       return;
     }
 
-    const response = await fetch(API_LISTS, {
+    const response = await fetch(`${API_LISTS}/${checkListID}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + auth_token
       },
       body: JSON.stringify({
-        checklist_id: checkListID,
+        // checklist_id: checkListID,
         checklist_name: checklistName
       })
     })
@@ -171,15 +172,15 @@ export const ListProvider = ({ children }) => {
       return;
     }
 
-    const response = await fetch(API_LISTS, {
+    const response = await fetch(`${API_LISTS}/${checkListId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + auth_token
       },
-      body: JSON.stringify({
-        checklist_id: checkListId,
-      })
+      // body: JSON.stringify({
+      //   checklist_id: checkListId,
+      // })
 
     });
     const responseData = await response.json();
