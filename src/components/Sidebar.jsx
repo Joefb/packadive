@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useList } from "../contexts/ListContext";
 import { useAuth } from "../contexts/AuthContext";
@@ -12,6 +12,7 @@ export default function Sidebar() {
   const [listName, setListName] = useState('');
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [isSwitching, setIsSwitching] = useState(false);
+  const navigate = useNavigate();
 
   const handleCreateList = async () => {
     await createList(listName);
@@ -46,6 +47,7 @@ export default function Sidebar() {
     setCurrentListId(newListId);
     setListChange(false);
     setIsSwitching(false);
+    navigate("/userhome");
   };
 
   useEffect(() => {
@@ -123,8 +125,8 @@ export default function Sidebar() {
             <button
               key={list.id}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg transition font-medium ${list.id === currentListId
-                  ? 'bg-blue-200 dark:bg-blue-800'
-                  : 'bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900'
+                ? 'bg-blue-200 dark:bg-blue-800'
+                : 'bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900'
                 }`}
               onClick={() => handleListClick(list.id)}
               onMouseDown={() => startHold(list.id)}

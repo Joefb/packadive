@@ -2,13 +2,14 @@ import { useAuth } from "../contexts/AuthContext";
 import { useList } from "../contexts/ListContext";
 import { Progress, Typography } from "@material-tailwind/react";
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const { isAuthenticated, logout, user } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { totalProgress } = useList();
+  const navigate = useNavigate();
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -28,7 +29,7 @@ export default function Navbar() {
 
   return (
     <div className="flex h-20 items-center justify-between px-6 border-b bg-white dark:bg-gray-900">
-      <div className="text-xl font-bold">Planadive</div>
+      <div className="text-xl font-bold" onClick={() => navigate("/userhome")}><span>Planadive</span></div>
 
       {/* Login/Register buttons */}
       {!isAuthenticated && (
