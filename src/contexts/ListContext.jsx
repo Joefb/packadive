@@ -338,7 +338,8 @@ export const ListProvider = ({ children }) => {
 
       // Update all items in the checklist
       const updatePromises = checklist.list_items.map(item =>
-        updateItemStatus(item.id, item.status)
+        // updateItemStatus(item.id, item.status)
+        updateItemStatus(item)
       );
 
       await Promise.all(updatePromises);

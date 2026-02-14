@@ -17,7 +17,7 @@ const CheckList = ({ setShowModal }) => {
   // const add = () => setItems([...items, items.length])
 
   const { deleteItem, updateItemStatus, getList, listData, setListData, currentListId, setCurrentListId, listChange, setListChange } = useList();
-  const checklist = listData.find(list => list.id === currentListId) //|| listData[0]
+  const checklist = listData.find(list => list.id === currentListId) || listData[0]
   const [originalChecklist, setOriginalChecklist] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [itemToModifyId, setItemToModifyId] = useState(null);
@@ -127,6 +127,9 @@ const CheckList = ({ setShowModal }) => {
 
 
   if (!checklist) return <div className="text-gray-500">No checklists found. Add a checklist!</div>;
+  const packedPercent = Math.round(
+    (checklist.list_items.filter(item => item.status === "Packed").length / checklist.list_items.length) * 100
+  );
 
   return (
     <div>
@@ -180,8 +183,10 @@ const CheckList = ({ setShowModal }) => {
 
       <Progress
         label="Packed"
-        value={Math.round((checklist.list_items.filter(item => item.status === "Packed").length / checklist.list_items.length) * 100)}
-        color="green"
+        //value={Math.round((checklist.list_items.filter(item => item.status === "Packed").length / checklist.list_items.length) * 100)}
+        value={packedPercent}
+        color={packedPercent === 100 ? "green" : "blue"}
+        //color="green"
         className="mb-4"
       />
       <ul className="flex flex-col gap-2 mt-4" ref={parent}>
