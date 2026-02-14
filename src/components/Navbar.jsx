@@ -56,7 +56,7 @@ export default function Navbar() {
               {totalProgress}%
             </Typography>
           </div>
-          <Progress value={totalProgress} color="green" />
+          <Progress value={totalProgress} color={totalProgress === 100 ? "green" : "blue"} />
         </div>
       )}
 

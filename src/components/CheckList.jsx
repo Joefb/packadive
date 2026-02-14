@@ -17,7 +17,7 @@ const CheckList = ({ setShowModal }) => {
   // const add = () => setItems([...items, items.length])
 
   const { deleteItem, updateItemStatus, getList, listData, setListData, currentListId, setCurrentListId, listChange, setListChange } = useList();
-  const checklist = listData.find(list => list.id === currentListId) || listData[0]
+  const checklist = listData.find(list => list.id === currentListId) //|| listData[0]
   const [originalChecklist, setOriginalChecklist] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [itemToModifyId, setItemToModifyId] = useState(null);

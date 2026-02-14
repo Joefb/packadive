@@ -294,7 +294,7 @@ export const ListProvider = ({ children }) => {
 
     try {
       // Include itemId in the URL path
-      const response = await fetch(`${API_ITEMS}/${itemObject.id}`, {
+      const response = await fetch(`${API_ITEMS}/${itemObject?.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
