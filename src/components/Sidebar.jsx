@@ -15,6 +15,13 @@ export default function Sidebar() {
   const navigate = useNavigate();
 
   const handleCreateList = async () => {
+    if (listChange && currentListId) {
+      const checklistToSave = listData.find(list => list.id === currentListId);
+      if (checklistToSave) {
+        await saveChecklistChanges(checklistToSave);
+      }
+    }
+
     await createList(listName);
     setCreateModalOpen(false);
     setListName('');
@@ -136,8 +143,8 @@ export default function Sidebar() {
               <button
                 key={list.id}
                 className={`relative overflow-hidden flex items-center gap-3 px-3 py-2 rounded-lg transition font-medium ${list.id === currentListId
-                    ? 'bg-blue-200 dark:bg-blue-800'
-                    : 'bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900'
+                  ? 'bg-blue-200 dark:bg-blue-800'
+                  : 'bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900'
                   }`}
                 onClick={() => handleListClick(list.id)}
                 onMouseDown={() => startHold(list.id)}
@@ -150,8 +157,8 @@ export default function Sidebar() {
                 {/* Progress bar background */}
                 <div
                   className={`absolute inset-0 transition-all duration-300 ${isComplete
-                      ? 'bg-green-400 dark:bg-green-600'
-                      : 'bg-blue-400 dark:bg-blue-600'
+                    ? 'bg-green-400 dark:bg-green-600'
+                    : 'bg-blue-400 dark:bg-blue-600'
                     }`}
                   style={{ width: `${progress}%` }}
                 />
@@ -174,7 +181,7 @@ export default function Sidebar() {
             );
           })
         ) : (
-          <span className="text-gray-500">No checklists found.</span>
+          <span className="text-gray-500">No checklists. Add a checklist.</span>
         )}
       </nav>
     </div>
