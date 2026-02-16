@@ -497,7 +497,7 @@ const DiveConditions = () => {
         {/* Current Conditions */}
         {weatherData && (
           <>
-            <Typography variant="h4" className="mb-4 text-blue-gray-700">
+            <Typography variant="h4" className="mb-7 text-blue-gray-700">
               Current Conditions
             </Typography>
 
@@ -657,7 +657,7 @@ const DiveConditions = () => {
             </div>
 
             {/* 7-Day Forecast */}
-            <Typography variant="h4" className="mb-4 text-blue-gray-700">
+            <Typography variant="h4" className="mb-7 text-blue-gray-700">
               7-Day Forecast
             </Typography>
 

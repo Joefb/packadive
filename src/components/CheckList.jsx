@@ -174,8 +174,8 @@ const CheckList = ({ setShowModal }) => {
         </div>
       )}
 
-      <div>
-        <h2 className="text-2xl font-bold mb-4">{checklist.checklist_name}</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-2xl font-bold">{checklist.checklist_name}</h2>
         <button
           onClick={() => setShowModal(true)}
           className="px-5 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
