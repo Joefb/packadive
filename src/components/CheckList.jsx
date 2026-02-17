@@ -11,7 +11,7 @@ const ITEM_COLORS = {
   "Packed": "bg-green-500 text-white",
 };
 
-const CheckList = ({ setShowModal }) => {
+const CheckList = () => {
   const [parent, enableAnimations] = useAutoAnimate()
 
   const { deleteItem, updateItemStatus, getList, listData, setListData, currentListId, setCurrentListId, listChange, setListChange } = useList();
@@ -133,7 +133,7 @@ const CheckList = ({ setShowModal }) => {
     );
 
   return (
-    <div>
+    <div className="px-6 py-6">
       {showDeleteModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
           <div className="bg-white p-8 rounded-lg shadow-2xl relative w-full max-w-md mx-4">
@@ -147,7 +147,7 @@ const CheckList = ({ setShowModal }) => {
                 }}
               />
               <button
-                className="w-full py-3 mb-4 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors duration-200 shadow focus:outline-none focus:ring-2 focus:ring-red-400"
+                className="w-full py-3 mb-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow focus:outline-none focus:ring-2 focus:ring-blue-400"
                 onClick={() => {
                   handleUpdateItemName(updateItemName);
                 }}
@@ -172,23 +172,15 @@ const CheckList = ({ setShowModal }) => {
         </div>
       )}
 
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold">{checklist.checklist_name}</h2>
-        <button
-          onClick={() => setShowModal(true)}
-          className="px-5 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
-        >
-          Add Item
-        </button>
+      <div className="mb-6">
+        <Progress
+          label="Packed"
+          value={packedPercent}
+          color={packedPercent === 100 ? "green" : "blue"}
+        />
       </div>
 
-      <Progress
-        label="Packed"
-        value={packedPercent}
-        color={packedPercent === 100 ? "green" : "blue"}
-        className="mb-4"
-      />
-      <ul className="flex flex-col gap-2 mt-4" ref={parent}>
+      <ul className="flex flex-col gap-2" ref={parent}>
         {sortedList?.map((item, idx) => (
           <li key={item?.id}>
             <button
