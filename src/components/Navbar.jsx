@@ -1,6 +1,5 @@
 import { useAuth } from "../contexts/AuthContext";
 import { useList } from "../contexts/ListContext";
-import { Progress, Typography } from "@material-tailwind/react";
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -84,14 +83,16 @@ export default function Navbar({ onMobileMenuToggle }) {
               <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
                 Packed and Ready
               </span>
-              <span className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-100">
+              <span className="text-xs sm:text-sm font-semibold bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">
                 {totalProgress}%
               </span>
             </div>
-            <Progress
-              value={totalProgress}
-              color={totalProgress === 100 ? "green" : "blue"}
-            />
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
+              <div
+                className="bg-gradient-to-r from-blue-500 to-green-500 h-2.5 rounded-full transition-all duration-300"
+                style={{ width: `${totalProgress}%` }}
+              ></div>
+            </div>
           </div>
         )}
 
