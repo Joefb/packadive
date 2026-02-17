@@ -35,10 +35,8 @@ export const AuthProvider = ({ children }) => {
 
   // Login function
   const login = async (user_name, password) => { //sending api request to login with email and password
-
     console.log('Send login request');
 
-    // const response = await fetch("http://127.0.0.1:5000/users/login", {
     const response = await fetch(API_LOGIN_USER, {
       method: 'POST',
       headers: {
@@ -61,7 +59,6 @@ export const AuthProvider = ({ children }) => {
   }
 
   const registerUser = async (email, password, user_name) => {
-    // const response = await fetch("http://127.0.0.1:5000/users", {
     const response = await fetch(API_REGISTER_USER, {
       method: 'POST',
       headers: {

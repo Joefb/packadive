@@ -1,11 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useList } from "../contexts/ListContext";
 import { useAuth } from "../contexts/AuthContext";
 import EditModal from "./EditModal";
 import { useHoldToEdit } from "../hooks/useHoldToEdit";
 
-export default function Sidebar() {
+export default function Sidebar({ onMobileMenuClose }) {
   const { deleteList, updateList, getList, createList, listData, currentListId, setCurrentListId, listChange, setListChange, saveChecklistChanges } = useList();
   const { showModal, targetId, startHold, cancelHold, closeModal } = useHoldToEdit();
   const { auth_token } = useAuth();
@@ -57,6 +57,11 @@ export default function Sidebar() {
     setListChange(false);
     setIsSwitching(false);
     navigate("/userhome");
+
+    // Close mobile menu if the callback is provided
+    if (onMobileMenuClose) {
+      onMobileMenuClose();
+    }
   };
 
   useEffect(() => {
@@ -99,28 +104,39 @@ export default function Sidebar() {
       </button>
 
       {createModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 w-full max-w-sm">
-            <h2 className="text-lg font-semibold mb-4">Create New List</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-2xl w-full max-w-md p-6 sm:p-8 relative border border-gray-200 dark:border-gray-800">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Create New List</h2>
+            </div>
+
             <input
               type="text"
               value={listName}
               onChange={e => setListName(e.target.value)}
-              placeholder="Enter list name"
-              className="w-full px-3 py-2 mb-4 border border-gray-300 dark:border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onKeyPress={e => e.key === 'Enter' && handleCreateList()}
+              placeholder="Enter list name..."
+              autoFocus
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-white transition"
             />
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={handleCreateList}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-              >
-                Create
-              </button>
+
+            <div className="flex justify-end gap-3">
               <button
                 onClick={() => setCreateModalOpen(false)}
-                className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+                className="px-5 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition font-medium"
               >
                 Cancel
+              </button>
+              <button
+                onClick={handleCreateList}
+                className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg font-medium"
+              >
+                Create
               </button>
             </div>
           </div>
@@ -172,9 +188,6 @@ export default function Sidebar() {
 
                 {/* Indicators */}
                 <div className="relative z-10 flex items-center gap-2">
-                  {list.id === currentListId && listChange && (
-                    <span className="text-xs text-orange-600 dark:text-orange-400">●</span>
-                  )}
                   <span className="text-xs font-semibold">
                     {progress}%
                   </span>
@@ -189,30 +202,3 @@ export default function Sidebar() {
     </div>
   );
 }
-
-
-
-
-{/* <nav className="flex flex-col gap-2"> */ }
-{/*   {listData && listData.length > 0 ? ( */ }
-{/*     listData.map((list, idx) => ( */ }
-{/*       <button */ }
-{/*         key={list.id} */ }
-{/*         className={`flex items-center gap-3 px-3 py-2 rounded-lg transition font-medium ${list.id === currentListId */ }
-{/*           ? 'bg-blue-200 dark:bg-blue-800' */ }
-{/*           : 'bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900' */ }
-{/*           }`} */ }
-{/*         onClick={() => handleListClick(list.id)} */ }
-{/*         disabled={isSwitching} */ }
-{/*       > */ }
-{/*         {list.checklist_name} */ }
-{/*         {list.id === currentListId && listChange && ( */ }
-{/*           <span className="ml-auto text-xs text-orange-600 dark:text-orange-400">●</span> */ }
-{/*         )} */ }
-{/*       </button> */ }
-{/*     )) */ }
-{/*   ) : ( */ }
-{/*     <span className="text-gray-500">No checklists found.</span> */ }
-{/*   )} */ }
-{/* </nav> */ }
-{/**/ }

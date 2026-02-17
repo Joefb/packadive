@@ -390,17 +390,18 @@ const DiveConditions = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
-        <Typography variant="h2" className="mb-6 text-blue-gray-800">
+        <Typography variant="h2" className="mb-6 text-blue-gray-800 dark:text-white">
           Dive Conditions
         </Typography>
 
-        {/* Search Section */}
+        {/* Search Section - FIXED FOR TABLETS */}
         <Card className="mb-6">
           <CardBody>
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+              {/* City Input - Takes more space */}
+              <div className="lg:col-span-5">
                 <Input
                   label="City"
                   value={city}
@@ -408,27 +409,33 @@ const DiveConditions = () => {
                   onKeyPress={handleKeyPress}
                   disabled={loading}
                   size="lg"
+                  className="w-full"
                 />
               </div>
-              <div className="flex-1">
+              {/* State Input - Takes more space */}
+              <div className="lg:col-span-5">
                 <Input
-                  label="State (optional - e.g., CA, California)"
+                  label="State (optional)"
                   value={state}
                   onChange={(e) => setState(e.target.value)}
                   onKeyPress={handleKeyPress}
                   disabled={loading}
                   size="lg"
+                  className="w-full"
                 />
               </div>
-              <Button
-                onClick={searchLocation}
-                disabled={loading}
-                className="md:w-48"
-                color="blue"
-                size="lg"
-              >
-                {loading ? <Spinner className="h-4 w-4" /> : "Search"}
-              </Button>
+              {/* Search Button - Smaller, doesn't overflow */}
+              <div className="lg:col-span-2">
+                <Button
+                  onClick={searchLocation}
+                  disabled={loading}
+                  className="w-full h-full"
+                  color="blue"
+                  size="lg"
+                >
+                  {loading ? <Spinner className="h-4 w-4 mx-auto" /> : "Search"}
+                </Button>
+              </div>
             </div>
           </CardBody>
         </Card>
@@ -457,14 +464,14 @@ const DiveConditions = () => {
                   <ListItem
                     key={index}
                     onClick={() => selectLocation(location)}
-                    className="cursor-pointer hover:bg-blue-50"
+                    className="cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20"
                   >
                     <div className="flex flex-col w-full">
-                      <Typography variant="h6">
+                      <Typography variant="h6" className="dark:text-white">
                         {location.name}
                         {location.admin1 && `, ${location.admin1}`}
                       </Typography>
-                      <Typography variant="small" className="text-gray-600">
+                      <Typography variant="small" className="text-gray-600 dark:text-gray-400">
                         {location.country}
                         {location.admin2 && ` • ${location.admin2}`} • Lat:{" "}
                         {location.latitude.toFixed(4)}, Lon:{" "}
@@ -482,11 +489,11 @@ const DiveConditions = () => {
         {locationData && (
           <Card className="mb-6">
             <CardBody>
-              <Typography variant="h5" className="mb-2">
+              <Typography variant="h5" className="mb-2 dark:text-white">
                 {locationData.name}
                 {locationData.admin1 && `, ${locationData.admin1}`}
               </Typography>
-              <Typography variant="small" className="text-gray-600">
+              <Typography variant="small" className="text-gray-600 dark:text-gray-400">
                 {locationData.country} • Lat: {locationData.latitude.toFixed(4)}
                 , Lon: {locationData.longitude.toFixed(4)}
               </Typography>
@@ -497,13 +504,14 @@ const DiveConditions = () => {
         {/* Current Conditions */}
         {weatherData && (
           <>
-            <Typography variant="h4" className="mb-7 text-blue-gray-700">
+            <Typography variant="h4" className="mb-8 text-blue-gray-700 dark:text-white">
               Current Conditions
             </Typography>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            {/* FIXED FOR TABLETS - Better grid breakpoints */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
               {/* Current Weather */}
-              <Card>
+              <Card className="mb-6 md:mb-0">
                 <CardHeader
                   color="blue"
                   className="relative h-16 flex items-center justify-center"
@@ -514,54 +522,54 @@ const DiveConditions = () => {
                 </CardHeader>
                 <CardBody>
                   <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <Typography className="text-gray-700">
+                    <div className="flex justify-between items-center flex-wrap gap-2">
+                      <Typography className="text-gray-700 dark:text-gray-300">
                         Temperature:
                       </Typography>
-                      <Typography className="font-bold text-2xl">
+                      <Typography className="font-bold text-2xl dark:text-white">
                         {weatherData.current.temperature_2m}°F
                       </Typography>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <Typography className="text-gray-700">
+                    <div className="flex justify-between items-center flex-wrap gap-2">
+                      <Typography className="text-gray-700 dark:text-gray-300">
                         Feels Like:
                       </Typography>
-                      <Typography className="font-semibold">
+                      <Typography className="font-semibold dark:text-white">
                         {weatherData.current.apparent_temperature}°F
                       </Typography>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <Typography className="text-gray-700">
+                    <div className="flex justify-between items-center flex-wrap gap-2">
+                      <Typography className="text-gray-700 dark:text-gray-300">
                         Conditions:
                       </Typography>
-                      <Typography className="font-semibold">
+                      <Typography className="font-semibold dark:text-white text-right">
                         {getWeatherDescription(
                           weatherData.current.weather_code
                         )}
                       </Typography>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <Typography className="text-gray-700">
+                    <div className="flex justify-between items-center flex-wrap gap-2">
+                      <Typography className="text-gray-700 dark:text-gray-300">
                         Humidity:
                       </Typography>
-                      <Typography className="font-semibold">
+                      <Typography className="font-semibold dark:text-white">
                         {weatherData.current.relative_humidity_2m}%
                       </Typography>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <Typography className="text-gray-700">Wind:</Typography>
-                      <Typography className="font-semibold">
+                    <div className="flex justify-between items-center flex-wrap gap-2">
+                      <Typography className="text-gray-700 dark:text-gray-300">Wind:</Typography>
+                      <Typography className="font-semibold dark:text-white">
                         {weatherData.current.wind_speed_10m} mph{" "}
                         {getWindDirection(
                           weatherData.current.wind_direction_10m
                         )}
                       </Typography>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <Typography className="text-gray-700">
+                    <div className="flex justify-between items-center flex-wrap gap-2">
+                      <Typography className="text-gray-700 dark:text-gray-300">
                         Precipitation:
                       </Typography>
-                      <Typography className="font-semibold">
+                      <Typography className="font-semibold dark:text-white">
                         {weatherData.current.precipitation}"
                       </Typography>
                     </div>
@@ -582,31 +590,31 @@ const DiveConditions = () => {
                   </CardHeader>
                   <CardBody>
                     <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <Typography className="text-gray-700">
+                      <div className="flex justify-between items-center flex-wrap gap-2">
+                        <Typography className="text-gray-700 dark:text-gray-300">
                           Wave Height:
                         </Typography>
-                        <Typography className="font-bold text-2xl">
+                        <Typography className="font-bold text-2xl dark:text-white">
                           {marineData.current.wave_height
                             ? `${marineData.current.wave_height.toFixed(1)} m`
                             : "N/A"}
                         </Typography>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <Typography className="text-gray-700">
+                      <div className="flex justify-between items-center flex-wrap gap-2">
+                        <Typography className="text-gray-700 dark:text-gray-300">
                           Wave Period:
                         </Typography>
-                        <Typography className="font-semibold">
+                        <Typography className="font-semibold dark:text-white">
                           {marineData.current.wave_period
                             ? `${marineData.current.wave_period.toFixed(1)} s`
                             : "N/A"}
                         </Typography>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <Typography className="text-gray-700">
+                      <div className="flex justify-between items-center flex-wrap gap-2">
+                        <Typography className="text-gray-700 dark:text-gray-300">
                           Wave Direction:
                         </Typography>
-                        <Typography className="font-semibold">
+                        <Typography className="font-semibold dark:text-white text-right">
                           {marineData.current.wave_direction
                             ? `${getWindDirection(
                               marineData.current.wave_direction
@@ -614,20 +622,20 @@ const DiveConditions = () => {
                             : "N/A"}
                         </Typography>
                       </div>
-                      <div className="flex justify-between items-center border-t pt-3">
-                        <Typography className="text-gray-700">
+                      <div className="flex justify-between items-center border-t pt-3 flex-wrap gap-2">
+                        <Typography className="text-gray-700 dark:text-gray-300">
                           🌡️ Water Temp:
                         </Typography>
-                        <Typography className="font-bold text-lg text-cyan-700">
+                        <Typography className="font-bold text-lg text-cyan-700 dark:text-cyan-400">
                           {getWaterTempDisplay()}
                         </Typography>
                       </div>
                       {waterTemp && waterTemp.temperature ? (
-                        <Typography variant="small" className="text-gray-500 italic">
+                        <Typography variant="small" className="text-gray-500 dark:text-gray-400 italic">
                           *From NOAA {waterTemp.stationName} station ({waterTemp.distance} km away)
                         </Typography>
                       ) : (
-                        <Typography variant="small" className="text-gray-500 italic">
+                        <Typography variant="small" className="text-gray-500 dark:text-gray-400 italic">
                           *Estimated seasonal range
                         </Typography>
                       )}
@@ -648,7 +656,7 @@ const DiveConditions = () => {
                     </Typography>
                   </CardHeader>
                   <CardBody>
-                    <Typography className="text-gray-600 text-center">
+                    <Typography className="text-gray-600 dark:text-gray-400 text-center">
                       {marineData.error}
                     </Typography>
                   </CardBody>
@@ -657,12 +665,12 @@ const DiveConditions = () => {
             </div>
 
             {/* 7-Day Forecast */}
-            <Typography variant="h4" className="mb-7 text-blue-gray-700">
+            <Typography variant="h4" className="mb-8 text-blue-gray-700 dark:text-white">
               7-Day Forecast
             </Typography>
 
             {/* Weather Forecast */}
-            <Card className="mb-6">
+            <Card className="mb-14">
               <CardHeader
                 color="blue"
                 className="relative h-16 flex items-center justify-center"
@@ -673,16 +681,16 @@ const DiveConditions = () => {
               </CardHeader>
               <CardBody>
                 <div className="overflow-x-auto">
-                  <div className="grid grid-cols-7 gap-4 min-w-max">
+                  <div className="grid grid-cols-7 gap-3 min-w-max">
                     {weatherData.daily.time.map((date, index) => (
                       <div
                         key={date}
-                        className="flex flex-col items-center p-4 bg-gray-50 rounded-lg"
+                        className="flex flex-col items-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg min-w-[120px]"
                       >
-                        <Typography className="font-semibold mb-2">
+                        <Typography className="font-semibold mb-2 dark:text-white text-sm">
                           {formatDate(date)}
                         </Typography>
-                        <Typography variant="small" className="text-gray-600 mb-2">
+                        <Typography variant="small" className="text-gray-600 dark:text-gray-400 mb-2 text-center text-xs">
                           {getWeatherDescription(
                             weatherData.daily.weather_code[index]
                           )}
@@ -693,13 +701,13 @@ const DiveConditions = () => {
                         <Typography className="font-semibold text-blue-500">
                           {weatherData.daily.temperature_2m_min[index]}°
                         </Typography>
-                        <Typography variant="small" className="text-gray-600 mt-2">
+                        <Typography variant="small" className="text-gray-600 dark:text-gray-400 mt-2 text-xs">
                           💧 {weatherData.daily.precipitation_sum[index]}"
                         </Typography>
-                        <Typography variant="small" className="text-gray-600">
+                        <Typography variant="small" className="text-gray-600 dark:text-gray-400 text-xs">
                           💨 {weatherData.daily.wind_speed_10m_max[index]} mph
                         </Typography>
-                        <Typography variant="small" className="text-gray-600">
+                        <Typography variant="small" className="text-gray-600 dark:text-gray-400 text-xs">
                           {getWindDirection(
                             weatherData.daily.wind_direction_10m_dominant[index]
                           )}
@@ -724,26 +732,26 @@ const DiveConditions = () => {
                 </CardHeader>
                 <CardBody>
                   <div className="overflow-x-auto">
-                    <div className="grid grid-cols-7 gap-4 min-w-max">
+                    <div className="grid grid-cols-7 gap-3 min-w-max">
                       {marineData.daily.time.map((date, index) => (
                         <div
                           key={date}
-                          className="flex flex-col items-center p-4 bg-blue-50 rounded-lg"
+                          className="flex flex-col items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg min-w-[120px]"
                         >
-                          <Typography className="font-semibold mb-2">
+                          <Typography className="font-semibold mb-2 dark:text-white text-sm">
                             {formatDate(date)}
                           </Typography>
-                          <Typography className="font-bold text-lg text-blue-700">
+                          <Typography className="font-bold text-lg text-blue-700 dark:text-blue-400">
                             {marineData.daily.wave_height_max[index]
                               ? `${marineData.daily.wave_height_max[
                                 index
                               ].toFixed(1)} m`
                               : "N/A"}
                           </Typography>
-                          <Typography variant="small" className="text-gray-600 mb-1">
+                          <Typography variant="small" className="text-gray-600 dark:text-gray-400 mb-1 text-xs">
                             Wave Height
                           </Typography>
-                          <Typography variant="small" className="text-gray-600">
+                          <Typography variant="small" className="text-gray-600 dark:text-gray-400 text-xs">
                             Period:{" "}
                             {marineData.daily.wave_period_max[index]
                               ? `${marineData.daily.wave_period_max[
@@ -751,7 +759,7 @@ const DiveConditions = () => {
                               ].toFixed(1)} s`
                               : "N/A"}
                           </Typography>
-                          <Typography variant="small" className="text-gray-600">
+                          <Typography variant="small" className="text-gray-600 dark:text-gray-400 text-xs">
                             {marineData.daily.wave_direction_dominant[index]
                               ? getWindDirection(
                                 marineData.daily.wave_direction_dominant[
@@ -760,11 +768,11 @@ const DiveConditions = () => {
                               )
                               : "N/A"}
                           </Typography>
-                          <div className="mt-2 pt-2 border-t border-blue-200 w-full text-center">
-                            <Typography variant="small" className="text-cyan-700 font-semibold">
+                          <div className="mt-2 pt-2 border-t border-blue-200 dark:border-blue-700 w-full text-center">
+                            <Typography variant="small" className="text-cyan-700 dark:text-cyan-400 font-semibold text-xs">
                               🌡️ {getWaterTempDisplay()}
                             </Typography>
-                            <Typography variant="small" className="text-gray-500">
+                            <Typography variant="small" className="text-gray-500 dark:text-gray-400 text-xs">
                               Water Temp
                             </Typography>
                           </div>
@@ -782,10 +790,10 @@ const DiveConditions = () => {
         {!weatherData && !loading && !error && locationResults.length === 0 && (
           <Card>
             <CardBody className="text-center py-12">
-              <Typography variant="h5" className="text-gray-600 mb-2">
+              <Typography variant="h5" className="text-gray-600 dark:text-gray-400 mb-2">
                 🏖️ Ready to Check Dive Conditions?
               </Typography>
-              <Typography className="text-gray-500">
+              <Typography className="text-gray-500 dark:text-gray-500">
                 Enter a city and state above to get current weather and marine
                 forecasts
               </Typography>
