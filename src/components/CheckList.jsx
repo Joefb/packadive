@@ -1,6 +1,5 @@
 import { useList } from "../contexts/ListContext";
 import { useState, useEffect } from "react";
-import { Progress } from "@material-tailwind/react";
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 
 
@@ -172,15 +171,24 @@ const CheckList = () => {
         </div>
       )}
 
-      <div className="mb-6">
-        <Progress
-          label="Packed"
-          value={packedPercent}
-          color={packedPercent === 100 ? "green" : "blue"}
-        />
+      <div className="mx-4 mb-6">
+        <div className="flex items-center justify-between gap-2 mb-2">
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            Packed
+          </span>
+          <span className="text-sm font-semibold bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">
+            {packedPercent}%
+          </span>
+        </div>
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
+          <div
+            className="bg-gradient-to-r from-blue-500 to-green-500 h-2.5 rounded-full transition-all duration-300"
+            style={{ width: `${packedPercent}%` }}
+          ></div>
+        </div>
       </div>
 
-      <ul className="flex flex-col gap-2" ref={parent}>
+      <ul className="flex flex-col gap-2 mx-4" ref={parent}>
         {sortedList?.map((item, idx) => (
           <li key={item?.id}>
             <button
