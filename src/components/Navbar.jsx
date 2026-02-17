@@ -29,18 +29,16 @@ export default function Navbar({ onMobileMenuToggle }) {
 
   return (
     <div className="bg-white dark:bg-gray-900 border-b">
-      {/* Mobile Logo - Only visible below md breakpoint */}
-      {isAuthenticated && (
-        <div className="md:hidden flex items-center justify-center py-4 border-b border-gray-100 dark:border-gray-800">
-          <div
-            className="font-revalia text-2xl sm:text-3xl cursor-pointer bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent hover:from-blue-500 hover:to-blue-300 transition-all duration-300"
-            style={{ lineHeight: '1.5' }}
-            onClick={() => navigate("/userhome")}
-          >
-            Packadive
-          </div>
+      {/* Mobile Logo - Only visible below md breakpoint - ALWAYS SHOW */}
+      <div className="md:hidden flex items-center justify-center py-4 border-b border-gray-100 dark:border-gray-800">
+        <div
+          className="font-revalia text-2xl sm:text-3xl cursor-pointer bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent hover:from-blue-500 hover:to-blue-300 transition-all duration-300"
+          style={{ lineHeight: '1.5' }}
+          onClick={() => navigate(isAuthenticated ? "/userhome" : "/")}
+        >
+          Packadive
         </div>
-      )}
+      </div>
 
       {/* Main Controls Row */}
       <div className="flex items-center justify-between px-4 sm:px-6 h-20 gap-4">
@@ -69,11 +67,11 @@ export default function Navbar({ onMobileMenuToggle }) {
             </button>
           )}
 
-          {/* Desktop Logo - Only visible at md breakpoint and above */}
+          {/* Desktop Logo - Only visible at md breakpoint and above - ALWAYS SHOW */}
           <div
             className="hidden md:block font-revalia text-2xl lg:text-3xl cursor-pointer bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent hover:from-blue-500 hover:to-blue-300 transition-all duration-300"
             style={{ lineHeight: '1.5' }}
-            onClick={() => navigate("/userhome")}
+            onClick={() => navigate(isAuthenticated ? "/userhome" : "/")}
           >
             Packadive
           </div>
@@ -132,15 +130,15 @@ export default function Navbar({ onMobileMenuToggle }) {
             )}
           </div>
         ) : (
-          /* Not Authenticated - Login/Register buttons */
-          <div className="flex gap-2 sm:gap-4">
+          /* Not Authenticated - Login/Register buttons - CENTERED ON MOBILE */
+          <div className="flex gap-3 w-full md:w-auto justify-center md:justify-end">
             <Link to="/login">
-              <button className="px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 text-white rounded text-sm sm:text-base hover:bg-blue-700 transition">
+              <button className="px-4 py-2 sm:px-5 sm:py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg text-sm sm:text-base font-semibold transition-all duration-300 transform hover:scale-105 shadow-md">
                 Login
               </button>
             </Link>
             <Link to="/register">
-              <button className="px-3 py-2 sm:px-4 sm:py-2 bg-green-600 text-white rounded text-sm sm:text-base hover:bg-green-700 transition">
+              <button className="px-4 py-2 sm:px-5 sm:py-2.5 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white rounded-lg text-sm sm:text-base font-semibold transition-all duration-300 transform hover:scale-105 shadow-md">
                 Register
               </button>
             </Link>
