@@ -31,7 +31,6 @@ export const ListProvider = ({ children }) => {
     if (listData) {
       setListData(JSON.parse(listData));
       if (JSON.parse(listData)?.length > 0 && !currentListId) {
-        // setCurrentListId(JSON.parse(listData)[0].checklist_id);
         setCurrentListId(JSON.parse(listData)[0].id);
       }
     }
@@ -130,7 +129,6 @@ export const ListProvider = ({ children }) => {
   }, [auth_token, getList]);
 
   // Update Checklist Name
-  // const response = await fetch(`${API_ITEMS}/${itemId}`, {
   const updateList = useCallback(async (checkListID, checklistName) => {
     if (!auth_token) {
       console.error('No auth token found.');
@@ -144,7 +142,6 @@ export const ListProvider = ({ children }) => {
         'Authorization': 'Bearer ' + auth_token
       },
       body: JSON.stringify({
-        // checklist_id: checkListID,
         checklist_name: checklistName
       })
     })
@@ -178,10 +175,6 @@ export const ListProvider = ({ children }) => {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + auth_token
       },
-      // body: JSON.stringify({
-      //   checklist_id: checkListId,
-      // })
-
     });
     const responseData = await response.json();
     console.log(responseData);
@@ -193,17 +186,12 @@ export const ListProvider = ({ children }) => {
   }, [auth_token, listData, getList]);
 
   ///// ITEMS FUNCTIONS /////
-
   const createItem = useCallback(async (itemName, status, listId) => {
     if (!auth_token) {
       console.error('No auth token found.');
       return;
     }
 
-    // item_name=data["item_name"],
-    // status=data["status"],
-    // checklist_id=data["checklist_id"],
-    //
     try {
       const response = await fetch(API_ITEMS, {
         method: 'POST',
@@ -241,9 +229,6 @@ export const ListProvider = ({ children }) => {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + auth_token
         },
-        // body: JSON.stringify({
-        //   status: newStatus,
-        // })
       });
 
       const currentList = listData?.find(list => list?.id === currentListId);
@@ -264,7 +249,6 @@ export const ListProvider = ({ children }) => {
 
       const responseData = await response.json();
       console.log('Item deleted:', responseData);
-      // return responseData;
 
     } catch (error) {
       console.error('Error deleting item:', error);
@@ -273,19 +257,8 @@ export const ListProvider = ({ children }) => {
 
   }, [auth_token, listData, getList]);
 
-  // const updateItem = useCallback(async (itemId, itemName) => {
-  //   // item_name=data["item_name"],
-  //   // status=data["status"],
-  //   // checklist_id=data["checklist_id"],
-  //
-  // }, []);
-  //
-  // const deleteItem = useCallback(async (itemId) => {
-  //
-  // }, []);
 
   // Update Item Status
-  // const updateItemStatus = useCallback(async (itemId, newStatus, newName) => {
   const updateItemStatus = useCallback(async (itemObject) => {
     if (!auth_token) {
       console.error('No auth token found.');
@@ -304,17 +277,8 @@ export const ListProvider = ({ children }) => {
       });
       const responseData = await response.json();
       console.log('Item updated:', responseData);
-      // await saveChecklistChanges(responseData);
-      // setListData(previousList => {
-      //   return previousList?.map(list => {
-      //     if (list?.id === responseData?.checklist_id) {
-      //       return responseData;
-      //     } else {
-      //       return list;
-      //     }
-      //   })
-      // })
       return responseData;
+
     } catch (error) {
       console.error('Error updating item:', error);
       throw error;
@@ -338,7 +302,6 @@ export const ListProvider = ({ children }) => {
 
       // Update all items in the checklist
       const updatePromises = checklist.list_items.map(item =>
-        // updateItemStatus(item.id, item.status)
         updateItemStatus(item)
       );
 

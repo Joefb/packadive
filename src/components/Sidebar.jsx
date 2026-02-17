@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useList } from "../contexts/ListContext";
 import { useAuth } from "../contexts/AuthContext";
@@ -189,30 +189,3 @@ export default function Sidebar() {
     </div>
   );
 }
-
-
-
-
-{/* <nav className="flex flex-col gap-2"> */ }
-{/*   {listData && listData.length > 0 ? ( */ }
-{/*     listData.map((list, idx) => ( */ }
-{/*       <button */ }
-{/*         key={list.id} */ }
-{/*         className={`flex items-center gap-3 px-3 py-2 rounded-lg transition font-medium ${list.id === currentListId */ }
-{/*           ? 'bg-blue-200 dark:bg-blue-800' */ }
-{/*           : 'bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900' */ }
-{/*           }`} */ }
-{/*         onClick={() => handleListClick(list.id)} */ }
-{/*         disabled={isSwitching} */ }
-{/*       > */ }
-{/*         {list.checklist_name} */ }
-{/*         {list.id === currentListId && listChange && ( */ }
-{/*           <span className="ml-auto text-xs text-orange-600 dark:text-orange-400">●</span> */ }
-{/*         )} */ }
-{/*       </button> */ }
-{/*     )) */ }
-{/*   ) : ( */ }
-{/*     <span className="text-gray-500">No checklists found.</span> */ }
-{/*   )} */ }
-{/* </nav> */ }
-{/**/ }

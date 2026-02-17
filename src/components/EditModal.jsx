@@ -6,7 +6,7 @@ const EditModal = ({
   itemName,
   onRename,
   onDelete,
-  entityType = "item" // "item" or "checklist"
+  entityType = "item"
 }) => {
   const [newName, setNewName] = useState(itemName);
 

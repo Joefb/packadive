@@ -12,9 +12,7 @@ const ITEM_COLORS = {
 };
 
 const CheckList = ({ setShowModal }) => {
-  // const [items, setItems] = useState([0, 1, 2])
   const [parent, enableAnimations] = useAutoAnimate()
-  // const add = () => setItems([...items, items.length])
 
   const { deleteItem, updateItemStatus, getList, listData, setListData, currentListId, setCurrentListId, listChange, setListChange } = useList();
   const checklist = listData.find(list => list.id === currentListId) || listData[0]
@@ -186,10 +184,8 @@ const CheckList = ({ setShowModal }) => {
 
       <Progress
         label="Packed"
-        //value={Math.round((checklist.list_items.filter(item => item.status === "Packed").length / checklist.list_items.length) * 100)}
         value={packedPercent}
         color={packedPercent === 100 ? "green" : "blue"}
-        //color="green"
         className="mb-4"
       />
       <ul className="flex flex-col gap-2 mt-4" ref={parent}>
@@ -214,24 +210,3 @@ const CheckList = ({ setShowModal }) => {
 }
 
 export default CheckList
-
-
-// {showDeleteModal && (
-//   <div className="bg-white p-8 rounded shadow-lg relative w-full m-10">
-//     <button
-//       className=""
-//       onClick={() => {
-//         handleDelete();
-//       }}
-//     >
-//       Delete Item
-//     </button>
-//     <button
-//       className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-//       onClick={() => setShowDeleteModal(false)}
-//     >
-//       &times;
-//     </button>
-//   </div>
-// )}
-//

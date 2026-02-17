@@ -1,11 +1,9 @@
 import { useList } from '../contexts/ListContext';
-import { useAuth } from '../contexts/AuthContext';
 import CheckList from '../components/CheckList';
 import { useState, useEffect, useRef } from 'react';
 
 const UserHome = () => {
   const { listData, createItem, currentListId, getList, listChange, saveChecklistChanges } = useList();
-  const { logout } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [itemName, setItemName] = useState('');
   const listChangeRef = useRef(listChange);
@@ -113,12 +111,3 @@ const UserHome = () => {
 }
 
 export default UserHome
-
-
-// <button
-//   onClick={() => setShowModal(true)}
-//   className="px-5 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
-// >
-//   Add Item
-// </button>
-
