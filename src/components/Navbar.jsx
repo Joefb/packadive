@@ -4,7 +4,7 @@ import { Progress, Typography } from "@material-tailwind/react";
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function Navbar() {
+export default function Navbar({ onMobileMenuToggle }) {
   const { isAuthenticated, logout, user } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -29,25 +29,50 @@ export default function Navbar() {
 
   return (
     <div className="flex h-20 items-center justify-between px-6 border-b bg-white dark:bg-gray-900">
-      <div className="text-xl font-bold" onClick={() => navigate("/userhome")}><span>Planadive</span></div>
+      <div className="flex items-center gap-4">
+        {/* Hamburger Menu Button - Only visible on mobile when authenticated */}
+        {isAuthenticated && (
+          <button
+            onClick={onMobileMenuToggle}
+            className="md:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+            aria-label="Toggle menu"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        )}
+
+        <div className="text-xl font-bold cursor-pointer" onClick={() => navigate("/userhome")}>
+          <span>Planadive</span>
+        </div>
+      </div>
 
       {/* Login/Register buttons */}
       {!isAuthenticated && (
-        <div className="flex h-20 items-center justify-between px-6 border-b bg-white dark:bg-gray-900">
-          <div className="flex gap-4">
-            <Link to="/login">
-              <button className="px-4 py-2 bg-blue-600 text-white rounded">Login</button>
-            </Link>
-            <Link to="/register">
-              <button className="px-4 py-2 bg-green-600 text-white rounded">Register</button>
-            </Link>
-          </div>
+        <div className="flex gap-4">
+          <Link to="/login">
+            <button className="px-4 py-2 bg-blue-600 text-white rounded">Login</button>
+          </Link>
+          <Link to="/register">
+            <button className="px-4 py-2 bg-green-600 text-white rounded">Register</button>
+          </Link>
         </div>
       )}
 
-      {/* Completion bar */}
+      {/* Completion bar - Hidden on small screens */}
       {isAuthenticated && (
-        <div className="w-1/2">
+        <div className="hidden sm:block w-1/3 lg:w-1/2">
           <div className="mb-2 flex items-center justify-between gap-4">
             <Typography color="blue-gray" variant="h6">
               Packed and Ready
@@ -62,14 +87,14 @@ export default function Navbar() {
 
       {/* Right side - user actions */}
       {isAuthenticated && (
-        <div className="flex items-center gap-4">
-          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 shadow-lg text-4xl">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <div className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 shadow-lg text-4xl">
             🤿
           </div>
 
           <div className="relative" ref={dropdownRef}>
             <button
-              className="flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 shadow-lg text-lg font-semibold focus:outline-none"
+              className="flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gray-100 dark:bg-gray-800 shadow-lg text-sm sm:text-lg font-semibold focus:outline-none"
               onClick={() => setDropdownOpen((open) => !open)}
             >
               <span>{user.user_name}</span>

@@ -5,7 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import EditModal from "./EditModal";
 import { useHoldToEdit } from "../hooks/useHoldToEdit";
 
-export default function Sidebar() {
+export default function Sidebar({ onMobileMenuClose }) {
   const { deleteList, updateList, getList, createList, listData, currentListId, setCurrentListId, listChange, setListChange, saveChecklistChanges } = useList();
   const { showModal, targetId, startHold, cancelHold, closeModal } = useHoldToEdit();
   const { auth_token } = useAuth();
@@ -57,6 +57,11 @@ export default function Sidebar() {
     setListChange(false);
     setIsSwitching(false);
     navigate("/userhome");
+
+    // Close mobile menu if the callback is provided
+    if (onMobileMenuClose) {
+      onMobileMenuClose();
+    }
   };
 
   useEffect(() => {
