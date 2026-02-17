@@ -104,7 +104,7 @@ export default function Navbar({ onMobileMenuToggle }) {
               className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white shadow-lg text-sm sm:text-base font-bold focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105"
               onClick={() => setDropdownOpen((open) => !open)}
             >
-              <span className="drop-shadow-sm">{user.user_name}</span>
+              <span className="drop-shadow-sm">{user.user_name[0].toUpperCase()}</span>
             </button>
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-900 rounded-lg shadow-lg py-2 z-50 border border-gray-200 dark:border-gray-700">

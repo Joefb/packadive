@@ -5,19 +5,19 @@ import { useList } from "../contexts/ListContext";
 const Profile = () => {
   const { user, updateUser } = useAuth();
   const { stats } = useList();
-  const [email, setEmail] = useState('');
+  const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleEmailUpdate = async (e) => {
+  const handleUserNameUpdate = async (e) => {
     e.preventDefault();
     try {
-      await updateUser({ email });
-      setMessage('Email updated successfully.');
-      setEmail('');
+      await updateUser({ user_name: userName });
+      setMessage('Username updated successfully.');
+      setUserName('');
     } catch (err) {
-      setMessage('Failed to update email.');
+      setMessage('Failed to update username. Username already taken or invalid.');
     }
   };
 
@@ -52,13 +52,13 @@ const Profile = () => {
         Total Lists: <span className="font-semibold">{stats.totalLists}</span>
       </div>
 
-      <form onSubmit={handleEmailUpdate} className="mb-6">
+      <form onSubmit={handleUserNameUpdate} className="mb-6">
         <label className="block mb-2 text-gray-700 font-semibold">
-          Email:
+          Username:
           <input
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
+            type="text"
+            value={userName}
+            onChange={e => setUserName(e.target.value)}
             required
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 p-2"
           />
@@ -67,7 +67,7 @@ const Profile = () => {
           type="submit"
           className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors font-semibold mt-2"
         >
-          Update Email
+          Update Username
         </button>
       </form>
       <form onSubmit={handlePasswordUpdate} className="mb-4">

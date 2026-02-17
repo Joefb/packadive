@@ -662,7 +662,7 @@ const DiveConditions = () => {
             </Typography>
 
             {/* Weather Forecast */}
-            <Card className="mb-6">
+            <Card className="mb-12">
               <CardHeader
                 color="blue"
                 className="relative h-16 flex items-center justify-center"
