@@ -66,13 +66,6 @@ export default function Footer() {
             </a>
           </div>
         </div>
-
-        {/* Bottom Text - Hidden on mobile */}
-        <div className="hidden sm:block mt-3 pt-3 border-t border-gray-300 dark:border-gray-700 text-center">
-          <p className="text-xs text-gray-500 dark:text-gray-500">
-            Made with passion for divers and adventurers 🤿
-          </p>
-        </div>
       </div>
     </footer>
   );
