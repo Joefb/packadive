@@ -188,9 +188,6 @@ export default function Sidebar({ onMobileMenuClose }) {
 
                 {/* Indicators */}
                 <div className="relative z-10 flex items-center gap-2">
-                  {list.id === currentListId && listChange && (
-                    <span className="text-xs text-orange-600 dark:text-orange-400">●</span>
-                  )}
                   <span className="text-xs font-semibold">
                     {progress}%
                   </span>

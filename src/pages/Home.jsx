@@ -138,12 +138,6 @@ const Home = () => {
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
                   <div className="bg-gradient-to-r from-blue-500 to-green-500 h-2.5 rounded-full transition-all duration-300" style={{ width: '50%' }}></div>
                 </div>
-                <div className="flex items-center gap-2 mt-3 text-xs text-gray-600 dark:text-gray-400">
-                  <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  10 of 20 items ready
-                </div>
               </div>
             </div>
           </div>

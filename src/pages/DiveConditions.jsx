@@ -503,7 +503,7 @@ const DiveConditions = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {/* Current Weather */}
-              <Card>
+              <Card className="mb-6 md:mb-0">
                 <CardHeader
                   color="blue"
                   className="relative h-16 flex items-center justify-center"
