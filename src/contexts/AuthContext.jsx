@@ -1,10 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
 // Endpoints:
-const API_LOGIN_USER = "http://127.0.0.1:5000/user/login";
-const API_REGISTER_USER = "http://127.0.0.1:5000/user";
-const API_UPDATE_USER = "http://127.0.0.1:5000/user";
-const API_DELETE_USER = "http://127.0.0.1:5000/user";
+const API_LOGIN_USER = "https://packadive-backend.onrender.com/user/login";
+const API_USER = "https://packadive-backend.onrender.com/user";
 
 //Step 1
 //Create the context
@@ -59,7 +57,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   const registerUser = async (email, password, user_name) => {
-    const response = await fetch(API_REGISTER_USER, {
+    const response = await fetch(API_USER, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -75,7 +73,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   const updateUser = async (updateData) => {
-    const response = await fetch(API_UPDATE_USER, {
+    const response = await fetch(API_USER, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -97,7 +95,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   const deleteUser = async () => {
-    const response = await fetch(API_DELETE_USER, {
+    const response = await fetch(API_USER, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
