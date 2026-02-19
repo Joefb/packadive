@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const EditModal = ({
   isOpen,
@@ -9,6 +9,13 @@ const EditModal = ({
   entityType = "item"
 }) => {
   const [newName, setNewName] = useState(itemName);
+
+  // Update newName whenever itemName changes or modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setNewName(itemName);
+    }
+  }, [itemName, isOpen]);
 
   if (!isOpen) return null;
 
