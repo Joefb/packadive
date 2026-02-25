@@ -17,8 +17,15 @@ export const useAuth = () => {
 
 //Step 3
 export const AuthProvider = ({ children }) => {
-  const [auth_token, setToken] = useState(JSON.parse(localStorage.getItem('auth_token')) || null);
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
+  const [auth_token, setToken] = useState(() => {
+    const token = localStorage.getItem('auth_token');
+    return token ? token : null;
+
+  });
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null; //parsing JSON object from LS
+  });
 
   //Grab already logged in user
   // useEffect(() => {
