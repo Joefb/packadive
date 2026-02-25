@@ -17,19 +17,19 @@ export const useAuth = () => {
 
 //Step 3
 export const AuthProvider = ({ children }) => {
-  const [auth_token, setToken] = useState(null);
-  const [user, setUser] = useState(null);
+  const [auth_token, setToken] = useState(JSON.parse(localStorage.getItem('auth_token')) || null);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
 
   //Grab already logged in user
-  useEffect(() => {
-    const savedToken = localStorage.getItem('auth_token');
-    const savedUser = localStorage.getItem('user');
-
-    if (savedToken && savedUser) {
-      setToken(JSON.parse(savedToken));
-      setUser(JSON.parse(savedUser)) //parsing JSON object from LS
-    }
-  }, []);
+  // useEffect(() => {
+  //   const savedToken = localStorage.getItem('auth_token');
+  //   const savedUser = localStorage.getItem('user');
+  //
+  //   if (savedToken && savedUser) {
+  //     setToken(JSON.parse(savedToken));
+  //     setUser(JSON.parse(savedUser)) //parsing JSON object from LS
+  //   }
+  // }, []);
 
   // Login function
   const login = async (user_name, password) => { //sending api request to login with email and password
