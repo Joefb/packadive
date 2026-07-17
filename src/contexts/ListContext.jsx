@@ -1,9 +1,10 @@
 import { useMemo, createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { useAuth } from './AuthContext';
+import { API_BASE_URL } from "../config";
 
 // Endpoints:
-const API_LISTS = "https://packadive-backend.onrender.com/checklists";
-const API_ITEMS = "https://packadive-backend.onrender.com/list_item";
+const API_LISTS = `${API_BASE_URL}/checklists`;
+const API_ITEMS = `${API_BASE_URL}/list_item`;
 
 //Step 1
 //Create the context
