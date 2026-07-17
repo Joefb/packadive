@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { API_BASE_URL } from "../config";
 
 // Endpoints:
-const API_LOGIN_USER = "https://packadive-backend.onrender.com/user/login";
-const API_USER = "https://packadive-backend.onrender.com/user";
+const API_LOGIN_USER = `${API_BASE_URL}/user/login`;
+const API_USER = `${API_BASE_URL}/user`;
 
 //Step 1
 //Create the context
