@@ -77,7 +77,11 @@ export const AuthProvider = ({ children }) => {
       })
     })
     const responseData = await response.json();
-    console.log(responseData);
+    if (!response.ok) {
+      throw new Error(responseData.message || "Registration failed");
+    }
+
+    return responseData;
   }
 
   const updateUser = async (updateData) => {
