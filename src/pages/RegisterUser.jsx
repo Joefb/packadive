@@ -50,7 +50,7 @@ const RegisterUser = () => {
         navigate('/login');
       }, 2000);
     } catch (err) {
-      setError("Registration failed. Username or email may already be taken.");
+      setError(err.message || "Registration failed. Please try again.");
     }
   }
 
