@@ -84,7 +84,7 @@ Camping at the dive site and forget to pack your sleeping bag? Ugh... not again!
 ### Hosting
 
 - **Frontend:** Vercel
-- **Backend:** Render
+- **Backend:** Self-hosted — Flask API and PostgreSQL each run in their own Podman container (Postgres in a rootless container) on a private network on a self-hosted server. Public access is exposed via a Cloudflare Tunnel, so no inbound ports are opened on the host.
 
 ---
 
@@ -95,10 +95,13 @@ React (Vercel or localhost)
    |
    | HTTPS/HTTP (JSON)
    v
-Flask REST API (Render or localhost)
+Cloudflare Tunnel (prod only — no inbound ports on host)
    |
    v
-PostgreSQL (prod) / SQLite (dev)
+Flask REST API — Podman container (self-hosted) or localhost
+   |
+   v
+PostgreSQL — separate rootless Podman container, private network (prod) / SQLite (dev)
 ```
 
 ---
@@ -108,7 +111,7 @@ PostgreSQL (prod) / SQLite (dev)
 ### Prerequisites
 
 - Node.js (LTS recommended)
-- Backend running (either deployed on Render or locally)
+- Backend running (either the deployed self-hosted API or locally)
 
 ### Setup
 
@@ -134,9 +137,9 @@ This project uses **two repos**:
 
 ### Option A — Use the deployed backend (fastest)
 
-Backend is already deployed:
+Backend is already deployed (self-hosted, behind a Cloudflare Tunnel):
 
-- **API:** <https://packadive-backend.onrender.com>
+- **API:** <https://api.packadive.com>
 
 1) Run frontend locally:
 
@@ -159,7 +162,7 @@ npm run dev
 - Toggle item statuses to update progress
 - Open **Dive Conditions** to fetch weather/forecast data
 
-> If the frontend is set to call a local API by default, update the API base URL inside the frontend Context(s) to use the Render URL.
+> If the frontend is set to call a local API by default, update the API base URL inside the frontend Context(s) to use the deployed API URL.
 
 ### Option B — Run everything locally (recommended for development)
 
@@ -186,7 +189,7 @@ This frontend’s API calls are implemented inside the React Context layer (not 
 If you want to swap between local and deployed APIs, update the API base URL in the Context files to one of:
 
 - Local: `http://127.0.0.1:5000`
-- Production: `https://packadive-backend.onrender.com`
+- Production: `https://api.packadive.com`
 
 ---
 
