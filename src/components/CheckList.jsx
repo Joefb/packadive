@@ -33,27 +33,45 @@ const CheckList = () => {
 
   }, [checklist]);
 
-  const handleItemClick = (itemId) => {
-    setListData(prevData => {
-      return prevData.map(list => {
-        if (list.id === currentListId && Array.isArray(list?.list_items)) {
-          return {
-            ...list,
-            list_items: list.list_items.map((item) => {
-              if (item.id === itemId) {
-                const currentIdx = ITEM_STATES.indexOf(item.status);
-                const newStatus = ITEM_STATES[(currentIdx + 1) % ITEM_STATES.length];
-                return { ...item, status: newStatus };
-              }
-              return item;
-            })
-          }
-        }
-        return list;
-      })
+  const handleItemClick = async (itemId) => {
+    const replaceItem = (data, replacement) => data.map(list => {
+      if (list.id === currentListId && Array.isArray(list?.list_items)) {
+        return {
+          ...list,
+          list_items: list.list_items.map(item => item.id === itemId ? replacement : item)
+        };
+      }
+      return list;
     });
 
+    let previousItem = null;
+    let updatedItem = null;
+
+    setListData(prevData => {
+      const currentItem = prevData
+        .find(list => list.id === currentListId)
+        ?.list_items?.find(item => item.id === itemId);
+
+      if (!currentItem) return prevData;
+
+      previousItem = currentItem;
+      const currentIdx = ITEM_STATES.indexOf(currentItem.status);
+      const newStatus = ITEM_STATES[(currentIdx + 1) % ITEM_STATES.length];
+      updatedItem = { ...currentItem, status: newStatus };
+
+      return replaceItem(prevData, updatedItem);
+    });
+
+    if (!updatedItem) return;
+
     setListChange(true);
+
+    try {
+      await updateItemStatus(updatedItem);
+    } catch (error) {
+      console.error('Error persisting item status, rolling back:', error);
+      setListData(prevData => replaceItem(prevData, previousItem));
+    }
   };
 
   // Initialize originalChecklist when checklist changes (e.g., when switching lists)
